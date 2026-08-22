@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Trip | Wanderlyst</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logo"
+        >
+
+            <i class="fa-solid fa-compass"></i>
+
+            Wanderlyst
+
+        </a>
+
+
+        <nav class="main-nav">
+
+
+            <a href="dashboard.html">
+
+                <i class="fa-solid fa-house"></i>
+
+                Home
+
+            </a>
+
+
+            <a href="discover.html">
+
+                <i class="fa-solid fa-compass"></i>
+
+                Discover
+
+            </a>
+
+
+            <a href="trips.html">
+
+                <i class="fa-solid fa-suitcase"></i>
+
+                My Trips
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="nav-right">
+
+
+            <a
+                href="profile.html"
+                class="profile-button"
+            >
+
+                <i class="fa-solid fa-user"></i>
+
+            </a>
+
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+                title="Logout"
+            >
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+            </button>
+
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="plan-page">
+
+
+        <div class="plan-container">
+
+
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
+
+            <div class="plan-heading">
+
+
+                <div class="globe">
+
+                    <i class="fa-solid fa-earth-americas"></i>
+
+                </div>
+
+
+                <p
+                    style="
+                        margin-top:20px;
+                        font-size:11px;
+                        letter-spacing:3px;
+                        color:#806b5b;
+                        font-weight:600;
+                    "
+                >
+
+                    YOUR NEXT ADVENTURE
+
+                </p>
+
+
+                <h1>
+
+                    Plan Your Journey
+
+                </h1>
+
+
+                <p>
+
+                    Your next adventure can begin anywhere in the world.
+
+                </p>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FORM
+            ================================================== -->
+
+            <form
+                id="tripForm"
+                class="trip-form"
+            >
+
+
+                <!-- TRIP NAME -->
+
+                <div class="form-group">
+
+
+                    <label for="tripName">
+
+                        <i class="fa-solid fa-suitcase"></i>
+
+                        Trip Name
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="tripName"
+                        placeholder="e.g. European Adventure"
+                        required
+                    >
+
+
+                </div>
+
+
+
+                <!-- DESTINATION -->
+
+                <div class="form-group">
+
+
+                    <label for="destination">
+
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        Where do you want to go?
+
+                    </label>
+
+
+                    <div
+                        style="
+                            position:relative;
+                        "
+                    >
+
+                        <input
+                            type="text"
+                            id="destination"
+                            placeholder="e.g. Tokyo, Japan"
+                            autocomplete="off"
+                            required
+                        >
+
+
+                        <div
+                            id="destinationSuggestions"
+                            class="destination-suggestions"
+                        ></div>
+
+
+                    </div>
+
+
+                    <small>
+
+                        Enter any city, country or destination in the world.
+
+                    </small>
+
+
+                </div>
+
+
+
+                <!-- DATES -->
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+
+                        <label for="startDate">
+
+                            <i class="fa-regular fa-calendar"></i>
+
+                            Start Date
+
+                        </label>
+
+
+                        <input
+                            type="date"
+                            id="startDate"
+                            required
+                        >
+
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+
+                        <label for="endDate">
+
+                            <i class="fa-regular fa-calendar-check"></i>
+
+                            End Date
+
+                        </label>
+
+
+                        <input
+                            type="date"
+                            id="endDate"
+                            required
+                        >
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- TRAVELLERS + STYLE -->
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+
+                        <label for="travellers">
+
+                            <i class="fa-solid fa-users"></i>
+
+                            Travellers
+
+                        </label>
+
+
+                        <input
+                            type="number"
+                            id="travellers"
+                            value="1"
+                            min="1"
+                            max="50"
+                            required
+                        >
+
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+
+                        <label for="style">
+
+                            <i class="fa-solid fa-compass"></i>
+
+                            Travel Style
+
+                        </label>
+
+
+                        <select id="style">
+
+
+                            <option value="Relaxed">
+
+                                Relaxed
+
+                            </option>
+
+
+                            <option value="Adventure">
+
+                                Adventure
+
+                            </option>
+
+
+                            <option value="Luxury">
+
+                                Luxury
+
+                            </option>
+
+
+                            <option value="Budget">
+
+                                Budget
+
+                            </option>
+
+
+                            <option value="Cultural">
+
+                                Cultural
+
+                            </option>
+
+
+                            <option value="Romantic">
+
+                                Romantic
+
+                            </option>
+
+
+                            <option value="Family">
+
+                                Family
+
+                            </option>
+
+
+                        </select>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- EXPERIENCE -->
+
+                <div class="form-group">
+
+
+                    <label for="description">
+
+                        <i class="fa-regular fa-note-sticky"></i>
+
+                        What do you want to experience?
+
+                    </label>
+
+
+                    <textarea
+                        id="description"
+                        rows="4"
+                        placeholder="Beaches, food, shopping, museums, adventure..."
+                    ></textarea>
+
+
+                </div>
+
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="plan-button"
+                >
+
+                    CREATE MY TRIP
+
+                    <i class="fa-solid fa-plane"></i>
+
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- TOAST -->
+
+    <div id="toast"></div>
+
+
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>

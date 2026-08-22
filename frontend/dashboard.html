@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Wanderlyst</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logo"
+        >
+
+            <i class="fa-solid fa-compass"></i>
+
+            Wanderlyst
+
+        </a>
+
+
+        <nav class="main-nav">
+
+
+            <a
+                href="dashboard.html"
+                class="active"
+            >
+
+                <i class="fa-solid fa-house"></i>
+
+                Home
+
+            </a>
+
+
+            <a href="discover.html">
+
+                <i class="fa-solid fa-compass"></i>
+
+                Discover
+
+            </a>
+
+
+            <a href="trips.html">
+
+                <i class="fa-solid fa-suitcase"></i>
+
+                My Trips
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="nav-right">
+
+
+            <a
+                href="profile.html"
+                class="profile-button"
+            >
+
+                <i class="fa-solid fa-user"></i>
+
+            </a>
+
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+                title="Logout"
+            >
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+            </button>
+
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="plan-page">
+
+
+        <div
+            class="plan-container"
+            style="max-width:1100px;"
+        >
+
+
+            <!-- =================================================
+                 HERO
+            ================================================== -->
+
+            <section class="dashboard-hero">
+
+
+                <div class="dashboard-hero-content">
+
+
+                    <p class="dashboard-eyebrow">
+
+                        WELCOME TO WANDERLYST
+
+                    </p>
+
+
+                    <h1>
+
+                        Your next adventure
+                        <br>
+                        starts here.
+
+                    </h1>
+
+
+                    <p class="dashboard-description">
+
+                        Discover incredible destinations, plan
+                        unforgettable journeys and keep all your
+                        adventures organized in one place.
+
+                    </p>
+
+
+                    <a
+                        href="create-trip.html"
+                        class="dashboard-primary-button"
+                    >
+
+                        PLAN A NEW TRIP
+
+                        <i class="fa-solid fa-plane"></i>
+
+                    </a>
+
+
+                </div>
+
+
+                <div class="dashboard-decoration">
+
+                    <i class="fa-solid fa-earth-americas"></i>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 QUICK ACTIONS
+            ================================================== -->
+
+            <section class="quick-actions">
+
+
+                <a
+                    href="create-trip.html"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+
+                        <i class="fa-solid fa-map-location-dot"></i>
+
+                    </div>
+
+
+                    <h3>
+
+                        Plan a Trip
+
+                    </h3>
+
+
+                    <p>
+
+                        Build your next adventure.
+
+                    </p>
+
+                </a>
+
+
+
+                <a
+                    href="discover.html"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+
+                        <i class="fa-solid fa-earth-americas"></i>
+
+                    </div>
+
+
+                    <h3>
+
+                        Discover
+
+                    </h3>
+
+
+                    <p>
+
+                        Find your next destination.
+
+                    </p>
+
+                </a>
+
+
+
+                <a
+                    href="trips.html"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+
+                        <i class="fa-solid fa-suitcase"></i>
+
+                    </div>
+
+
+                    <h3>
+
+                        My Trips
+
+                    </h3>
+
+
+                    <p>
+
+                        View your adventures.
+
+                    </p>
+
+                </a>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 RECENT TRIPS
+            ================================================== -->
+
+            <section class="recent-section">
+
+
+                <div class="recent-header">
+
+
+                    <div>
+
+                        <p class="section-eyebrow">
+
+                            YOUR JOURNEYS
+
+                        </p>
+
+
+                        <h2>
+
+                            Recent Trips
+
+                        </h2>
+
+                    </div>
+
+
+                    <a
+                        href="trips.html"
+                        class="view-all"
+                    >
+
+                        View all
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </a>
+
+
+                </div>
+
+
+                <div
+                    id="recentTrips"
+                    class="recent-trips-grid"
+                ></div>
+
+
+            </section>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <div id="toast"></div>
+
+
+    <script src="script.js"></script>
+
+
+    <!-- =====================================================
+         DASHBOARD TRIP DISPLAY
+    ====================================================== -->
+
+    <script>
+
+        const recentTrips =
+            document.getElementById("recentTrips");
+
+
+        const savedTrips =
+            JSON.parse(
+                localStorage.getItem(
+                    "wanderlystTrips"
+                ) || "[]"
+            );
+
+
+        function displayRecentTrips() {
+
+            if (!recentTrips) {
+                return;
+            }
+
+
+            if (savedTrips.length === 0) {
+
+                recentTrips.innerHTML = `
+
+                    <div class="empty-trips">
+
+                        <div class="empty-icon">
+
+                            <i class="fa-solid fa-plane"></i>
+
+                        </div>
+
+                        <h3>
+
+                            No trips yet
+
+                        </h3>
+
+                        <p>
+
+                            Your next adventure is waiting.
+
+                        </p>
+
+                        <a href="create-trip.html">
+
+                            Create your first trip
+
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            const latestTrips =
+                savedTrips
+                    .slice()
+                    .reverse()
+                    .slice(0, 3);
+
+
+            recentTrips.innerHTML =
+                latestTrips.map(
+                    trip => `
+
+                        <article class="recent-trip-card">
+
+                            <div class="recent-trip-icon">
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                            </div>
+
+
+                            <div class="recent-trip-info">
+
+                                <h3>
+
+                                    ${trip.name || "My Trip"}
+
+                                </h3>
+
+
+                                <p>
+
+                                    <i class="fa-solid fa-location-dot"></i>
+
+                                    ${trip.destination || "Unknown destination"}
+
+                                </p>
+
+
+                                <small>
+
+                                    ${trip.travellers || 1}
+                                    traveller${Number(trip.travellers || 1) !== 1 ? "s" : ""}
+
+                                    ·
+
+                                    ${trip.style || "Relaxed"}
+
+                                </small>
+
+                            </div>
+
+
+                            <a
+                                href="itinerary.html"
+                                class="recent-trip-arrow"
+                                title="View itinerary"
+                            >
+
+                                <i class="fa-solid fa-arrow-right"></i>
+
+                            </a>
+
+                        </article>
+
+                    `
+                )
+                .join("");
+
+        }
+
+
+        displayRecentTrips();
+
+    </script>
+
+
+</body>
+
+</html>

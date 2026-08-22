@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Discover | Wanderlyst</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logo"
+        >
+
+            <i class="fa-solid fa-compass"></i>
+
+            Wanderlyst
+
+        </a>
+
+
+        <nav class="main-nav">
+
+            <a href="dashboard.html">
+
+                <i class="fa-solid fa-house"></i>
+
+                Home
+
+            </a>
+
+
+            <a
+                href="discover.html"
+                class="active"
+            >
+
+                <i class="fa-solid fa-compass"></i>
+
+                Discover
+
+            </a>
+
+
+            <a href="trips.html">
+
+                <i class="fa-solid fa-suitcase"></i>
+
+                My Trips
+
+            </a>
+
+        </nav>
+
+
+        <div class="nav-right">
+
+            <a
+                href="profile.html"
+                class="profile-button"
+            >
+
+                <i class="fa-solid fa-user"></i>
+
+            </a>
+
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+                title="Logout"
+            >
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="plan-page">
+
+
+        <div
+            class="plan-container"
+            style="max-width:1150px;"
+        >
+
+
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
+
+            <section class="discover-header">
+
+                <p class="section-eyebrow">
+
+                    EXPLORE THE WORLD
+
+                </p>
+
+
+                <h1>
+
+                    Where will you go?
+
+                </h1>
+
+
+                <p>
+
+                    Find inspiration for your next unforgettable
+                    adventure.
+
+                </p>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SEARCH
+            ================================================== -->
+
+            <div class="discover-search">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+
+                <input
+                    type="text"
+                    id="discoverSearch"
+                    placeholder="Search cities, countries or regions..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+
+            <!-- =================================================
+                 REGION FILTERS
+            ================================================== -->
+
+            <div class="region-filters">
+
+                <button
+                    class="region-filter active"
+                    data-region="All"
+                >
+
+                    All
+
+                </button>
+
+
+                <button
+                    class="region-filter"
+                    data-region="Asia"
+                >
+
+                    Asia
+
+                </button>
+
+
+                <button
+                    class="region-filter"
+                    data-region="Europe"
+                >
+
+                    Europe
+
+                </button>
+
+
+                <button
+                    class="region-filter"
+                    data-region="North America"
+                >
+
+                    North America
+
+                </button>
+
+
+                <button
+                    class="region-filter"
+                    data-region="Middle East"
+                >
+
+                    Middle East
+
+                </button>
+
+
+                <button
+                    class="region-filter"
+                    data-region="Africa"
+                >
+
+                    Africa
+
+                </button>
+
+
+                <button
+                    class="region-filter"
+                    data-region="Oceania"
+                >
+
+                    Oceania
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 DESTINATIONS
+            ================================================== -->
+
+            <section>
+
+                <div
+                    id="destinationGrid"
+                    class="destination-grid"
+                ></div>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+
+    <div id="toast"></div>
+
+
+
+    <script src="script.js"></script>
+
+
+    <script>
+
+        /* =====================================================
+           DESTINATION DATA
+        ===================================================== */
+
+        const destinations = [
+
+            {
+                city: "Tokyo",
+                country: "Japan",
+                region: "Asia",
+                image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1000&q=85",
+                description: "Neon streets, ancient temples and incredible food."
+            },
+
+            {
+                city: "Bali",
+                country: "Indonesia",
+                region: "Asia",
+                image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1000&q=85",
+                description: "Tropical beaches, temples and beautiful island landscapes."
+            },
+
+            {
+                city: "Seoul",
+                country: "South Korea",
+                region: "Asia",
+                image: "https://images.unsplash.com/photo-1538485399081-7c897b3a5e8f?auto=format&fit=crop&w=1000&q=85",
+                description: "Modern city life, Korean culture, food and history."
+            },
+
+            {
+                city: "Singapore",
+                country: "Singapore",
+                region: "Asia",
+                image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=1000&q=85",
+                description: "A futuristic city filled with gardens, food and culture."
+            },
+
+            {
+                city: "Paris",
+                country: "France",
+                region: "Europe",
+                image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1000&q=85",
+                description: "Art, architecture, cafés and unforgettable romance."
+            },
+
+            {
+                city: "London",
+                country: "United Kingdom",
+                region: "Europe",
+                image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1000&q=85",
+                description: "History, royal landmarks and vibrant neighbourhoods."
+            },
+
+            {
+                city: "Rome",
+                country: "Italy",
+                region: "Europe",
+                image: "https://images.unsplash.com/photo-1529260830199-42c24126f198?auto=format&fit=crop&w=1000&q=85",
+                description: "Ancient ruins, Italian cuisine and timeless streets."
+            },
+
+            {
+                city: "Barcelona",
+                country: "Spain",
+                region: "Europe",
+                image: "https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=1000&q=85",
+                description: "Architecture, beaches, tapas and Mediterranean culture."
+            },
+
+            {
+                city: "Dubai",
+                country: "United Arab Emirates",
+                region: "Middle East",
+                image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1000&q=85",
+                description: "Luxury, futuristic architecture and desert adventures."
+            },
+
+            {
+                city: "Cairo",
+                country: "Egypt",
+                region: "Africa",
+                image: "https://images.unsplash.com/photo-1568322445389-f64ac2515020?auto=format&fit=crop&w=1000&q=85",
+                description: "Ancient pyramids, fascinating history and Nile views."
+            },
+
+            {
+                city: "Cape Town",
+                country: "South Africa",
+                region: "Africa",
+                image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1000&q=85",
+                description: "Mountains, beaches, wildlife and incredible landscapes."
+            },
+
+            {
+                city: "New York",
+                country: "United States",
+                region: "North America",
+                image: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=1000&q=85",
+                description: "Skyscrapers, Broadway, museums and endless energy."
+            },
+
+            {
+                city: "Vancouver",
+                country: "Canada",
+                region: "North America",
+                image: "https://images.unsplash.com/photo-1559511260-66a654ae982a?auto=format&fit=crop&w=1000&q=85",
+                description: "Mountains, ocean views and a beautiful modern city."
+            },
+
+            {
+                city: "Sydney",
+                country: "Australia",
+                region: "Oceania",
+                image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1000&q=85",
+                description: "Beautiful beaches, harbour views and coastal adventures."
+            },
+
+            {
+                city: "Goa",
+                country: "India",
+                region: "Asia",
+                image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1000&q=85",
+                description: "Golden beaches, relaxed vibes and coastal adventures."
+            },
+
+            {
+                city: "Istanbul",
+                country: "Turkey",
+                region: "Europe",
+                image: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1000&q=85",
+                description: "A fascinating meeting point of Europe and Asia."
+            }
+
+        ];
+
+
+
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
+
+        const destinationGrid =
+            document.getElementById(
+                "destinationGrid"
+            );
+
+
+        const searchInput =
+            document.getElementById(
+                "discoverSearch"
+            );
+
+
+        const regionButtons =
+            document.querySelectorAll(
+                ".region-filter"
+            );
+
+
+        let selectedRegion = "All";
+
+
+
+        /* =====================================================
+           RENDER
+        ===================================================== */
+
+        function renderDestinations() {
+
+            const query =
+                searchInput
+                    ? searchInput.value
+                        .trim()
+                        .toLowerCase()
+                    : "";
+
+
+            const filtered =
+                destinations.filter(
+                    destination => {
+
+                        const matchesSearch =
+
+                            destination.city
+                                .toLowerCase()
+                                .includes(query)
+
+                            ||
+
+                            destination.country
+                                .toLowerCase()
+                                .includes(query)
+
+                            ||
+
+                            destination.region
+                                .toLowerCase()
+                                .includes(query);
+
+
+                        const matchesRegion =
+
+                            selectedRegion === "All"
+
+                            ||
+
+                            destination.region ===
+                                selectedRegion;
+
+
+                        return (
+                            matchesSearch &&
+                            matchesRegion
+                        );
+
+                    }
+                );
+
+
+
+            if (filtered.length === 0) {
+
+                destinationGrid.innerHTML = `
+
+                    <div class="discover-empty">
+
+                        <i class="fa-solid fa-earth-americas"></i>
+
+                        <h2>
+
+                            No destinations found
+
+                        </h2>
+
+                        <p>
+
+                            Try another city, country or region.
+
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+
+            destinationGrid.innerHTML =
+
+                filtered
+                    .map(
+                        destination => `
+
+                            <article class="destination-card">
+
+
+                                <div
+                                    class="destination-image"
+                                    style="
+                                        background-image:
+                                        url('${destination.image}');
+                                    "
+                                >
+
+                                    <span>
+
+                                        ${destination.region}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div class="destination-content">
+
+
+                                    <h2>
+
+                                        ${destination.city}
+
+                                    </h2>
+
+
+                                    <p class="destination-country">
+
+                                        <i class="fa-solid fa-location-dot"></i>
+
+                                        ${destination.country}
+
+                                    </p>
+
+
+                                    <p class="destination-description">
+
+                                        ${destination.description}
+
+                                    </p>
+
+
+                                    <button
+                                        class="discover-plan-button"
+                                        data-destination="${destination.city}, ${destination.country}"
+                                    >
+
+                                        PLAN THIS TRIP
+
+                                        <i class="fa-solid fa-arrow-right"></i>
+
+                                    </button>
+
+
+                                </div>
+
+
+                            </article>
+
+                        `
+                    )
+                    .join("");
+
+
+
+            /* =================================================
+               PLAN BUTTONS
+            ================================================== */
+
+            document
+                .querySelectorAll(
+                    ".discover-plan-button"
+                )
+                .forEach(
+                    button => {
+
+                        button.addEventListener(
+                            "click",
+                            () => {
+
+                                const destination =
+                                    button.dataset.destination;
+
+
+                                localStorage.setItem(
+                                    "wanderlystSelectedDestination",
+                                    destination
+                                );
+
+
+                                window.location.href =
+                                    "create-trip.html";
+
+                            }
+                        );
+
+                    }
+                );
+
+        }
+
+
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "input",
+                renderDestinations
+            );
+
+        }
+
+
+
+        /* =====================================================
+           REGION FILTER
+        ===================================================== */
+
+        regionButtons.forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        regionButtons.forEach(
+                            btn =>
+                                btn.classList.remove(
+                                    "active"
+                                )
+                        );
+
+
+                        button.classList.add(
+                            "active"
+                        );
+
+
+                        selectedRegion =
+                            button.dataset.region;
+
+
+                        renderDestinations();
+
+                    }
+                );
+
+            }
+        );
+
+
+
+        /* =====================================================
+           INITIAL RENDER
+        ===================================================== */
+
+        renderDestinations();
+
+    </script>
+
+
+</body>
+
+</html>

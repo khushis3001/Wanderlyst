@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Trips | Wanderlyst</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="topbar">
+
+
+        <a
+            href="dashboard.html"
+            class="dashboard-logo"
+        >
+
+            <i class="fa-solid fa-compass"></i>
+
+            Wanderlyst
+
+        </a>
+
+
+        <nav class="main-nav">
+
+
+            <a href="dashboard.html">
+
+                <i class="fa-solid fa-house"></i>
+
+                Home
+
+            </a>
+
+
+            <a href="discover.html">
+
+                <i class="fa-solid fa-compass"></i>
+
+                Discover
+
+            </a>
+
+
+            <a
+                href="trips.html"
+                class="active"
+            >
+
+                <i class="fa-solid fa-suitcase"></i>
+
+                My Trips
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="nav-right">
+
+
+            <a
+                href="profile.html"
+                class="profile-button"
+            >
+
+                <i class="fa-solid fa-user"></i>
+
+            </a>
+
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+                title="Logout"
+            >
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+            </button>
+
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="plan-page">
+
+
+        <div
+            class="plan-container"
+            style="max-width:1100px;"
+        >
+
+
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
+
+            <section class="trips-header">
+
+
+                <div>
+
+                    <p class="section-eyebrow">
+
+                        YOUR ADVENTURES
+
+                    </p>
+
+
+                    <h1>
+
+                        My Trips
+
+                    </h1>
+
+
+                    <p>
+
+                        Every journey begins with a single destination.
+
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="create-trip.html"
+                    class="dashboard-primary-button"
+                >
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    NEW TRIP
+
+                </a>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 TRIP COUNT
+            ================================================== -->
+
+            <div class="trip-summary">
+
+
+                <div>
+
+                    <i class="fa-solid fa-suitcase"></i>
+
+                    <span id="tripCount">
+
+                        0
+
+                    </span>
+
+                    trips
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-earth-americas"></i>
+
+                    <span id="destinationCount">
+
+                        0
+
+                    </span>
+
+                    destinations
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 TRIPS GRID
+            ================================================== -->
+
+            <section>
+
+                <div
+                    id="tripsGrid"
+                    class="trips-grid"
+                ></div>
+
+            </section>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <div id="toast"></div>
+
+
+
+    <script src="script.js"></script>
+
+
+    <!-- =====================================================
+         TRIPS LOGIC
+    ====================================================== -->
+
+    <script>
+
+        const tripsGrid =
+            document.getElementById(
+                "tripsGrid"
+            );
+
+
+        const tripCount =
+            document.getElementById(
+                "tripCount"
+            );
+
+
+        const destinationCount =
+            document.getElementById(
+                "destinationCount"
+            );
+
+
+        let trips =
+            JSON.parse(
+                localStorage.getItem(
+                    "wanderlystTrips"
+                ) || "[]"
+            );
+
+
+
+        function renderTrips() {
+
+            if (!tripsGrid) {
+                return;
+            }
+
+
+            /*
+             * Counters
+             */
+
+            if (tripCount) {
+
+                tripCount.textContent =
+                    trips.length;
+
+            }
+
+
+            if (destinationCount) {
+
+                const destinations =
+                    new Set(
+                        trips.map(
+                            trip =>
+                                (
+                                    trip.destination || ""
+                                )
+                                .trim()
+                                .toLowerCase()
+                        )
+                    );
+
+
+                destinationCount.textContent =
+                    destinations.size;
+
+            }
+
+
+
+            /*
+             * Empty state
+             */
+
+            if (trips.length === 0) {
+
+                tripsGrid.innerHTML = `
+
+                    <div class="trips-empty">
+
+                        <div class="empty-icon">
+
+                            <i class="fa-solid fa-suitcase-rolling"></i>
+
+                        </div>
+
+
+                        <h2>
+
+                            No trips yet
+
+                        </h2>
+
+
+                        <p>
+
+                            Start planning your first adventure.
+
+                        </p>
+
+
+                        <a
+                            href="create-trip.html"
+                            class="dashboard-primary-button"
+                        >
+
+                            <i class="fa-solid fa-plus"></i>
+
+                            CREATE MY FIRST TRIP
+
+                        </a>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+
+            /*
+             * Trip cards
+             */
+
+            tripsGrid.innerHTML =
+                trips
+                    .slice()
+                    .reverse()
+                    .map(
+                        (trip, index) => {
+
+                            const actualIndex =
+                                trips.length -
+                                1 -
+                                index;
+
+
+                            return `
+
+                                <article
+                                    class="trip-card"
+                                >
+
+
+                                    <div
+                                        class="trip-card-top"
+                                    >
+
+                                        <div
+                                            class="trip-card-icon"
+                                        >
+
+                                            <i class="fa-solid fa-location-dot"></i>
+
+                                        </div>
+
+
+                                        <span
+                                            class="trip-style"
+                                        >
+
+                                            ${trip.style || "Relaxed"}
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <div
+                                        class="trip-card-body"
+                                    >
+
+                                        <h2>
+
+                                            ${trip.name || "My Trip"}
+
+                                        </h2>
+
+
+                                        <p
+                                            class="trip-destination"
+                                        >
+
+                                            <i class="fa-solid fa-location-dot"></i>
+
+                                            ${trip.destination || "Unknown destination"}
+
+                                        </p>
+
+
+                                        <div
+                                            class="trip-details"
+                                        >
+
+                                            <span>
+
+                                                <i class="fa-regular fa-calendar"></i>
+
+                                                ${trip.startDate || "—"}
+
+                                            </span>
+
+
+                                            <span>
+
+                                                <i class="fa-solid fa-users"></i>
+
+                                                ${trip.travellers || 1}
+
+                                            </span>
+
+                                        </div>
+
+
+                                        ${
+                                            trip.description
+                                                ?
+                                                `
+                                                    <p
+                                                        class="trip-description"
+                                                    >
+
+                                                        ${trip.description}
+
+                                                    </p>
+                                                `
+                                                :
+                                                ""
+                                        }
+
+                                    </div>
+
+
+                                    <div
+                                        class="trip-card-footer"
+                                    >
+
+                                        <button
+                                            class="view-trip-button"
+                                            data-index="${actualIndex}"
+                                        >
+
+                                            VIEW ITINERARY
+
+                                            <i class="fa-solid fa-arrow-right"></i>
+
+                                        </button>
+
+
+                                        <button
+                                            class="delete-trip-button"
+                                            data-index="${actualIndex}"
+                                            title="Delete trip"
+                                        >
+
+                                            <i class="fa-regular fa-trash-can"></i>
+
+                                        </button>
+
+                                    </div>
+
+
+                                </article>
+
+                            `;
+
+                        }
+                    )
+                    .join("");
+
+
+
+            /*
+             * View itinerary
+             */
+
+            document
+                .querySelectorAll(
+                    ".view-trip-button"
+                )
+                .forEach(
+                    button => {
+
+                        button.addEventListener(
+                            "click",
+                            () => {
+
+                                const index =
+                                    Number(
+                                        button.dataset.index
+                                    );
+
+
+                                const selectedTrip =
+                                    trips[index];
+
+
+                                localStorage.setItem(
+                                    "wanderlystSelectedTrip",
+                                    JSON.stringify(
+                                        selectedTrip
+                                    )
+                                );
+
+
+                                window.location.href =
+                                    "itinerary.html";
+
+                            }
+                        );
+
+                    }
+                );
+
+
+
+            /*
+             * Delete trip
+             */
+
+            document
+                .querySelectorAll(
+                    ".delete-trip-button"
+                )
+                .forEach(
+                    button => {
+
+                        button.addEventListener(
+                            "click",
+                            () => {
+
+                                const index =
+                                    Number(
+                                        button.dataset.index
+                                    );
+
+
+                                const trip =
+                                    trips[index];
+
+
+                                const confirmed =
+                                    confirm(
+                                        `Delete "${trip.name || "this trip"}"?`
+                                    );
+
+
+                                if (!confirmed) {
+                                    return;
+                                }
+
+
+                                trips.splice(
+                                    index,
+                                    1
+                                );
+
+
+                                localStorage.setItem(
+                                    "wanderlystTrips",
+                                    JSON.stringify(
+                                        trips
+                                    )
+                                );
+
+
+                                renderTrips();
+
+                            }
+                        );
+
+                    }
+                );
+
+        }
+
+
+
+        renderTrips();
+
+    </script>
+
+
+</body>
+
+</html>
