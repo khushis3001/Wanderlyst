@@ -1,140 +1,270 @@
-/* =========================================================
-   WANDERLYST - MAIN JAVASCRIPT
-   ========================================================= */
+/* =====================================================
+   WANDERLYST
+   MAIN JAVASCRIPT
+===================================================== */
 
 
-/* =========================================================
-   STORAGE KEYS
-========================================================= */
+/* =====================================================
+   GLOBAL VARIABLES
+===================================================== */
 
-const TRIPS_KEY = "wanderlystTrips";
-const CURRENT_TRIP_KEY = "wanderlystCurrentTrip";
-const USER_KEY = "wanderlystUser";
+let travellerCount = 2;
 
+let selectedInterests = [];
 
+let selectedTravelStyle = "Budget";
 
-/* =========================================================
-   HELPER FUNCTIONS
-========================================================= */
+let currentTrip = null;
 
-
-/* Get saved trips */
-
-function getTrips() {
-
-    try {
-
-        const trips = localStorage.getItem(TRIPS_KEY);
-
-        return trips ? JSON.parse(trips) : [];
-
-    } catch (error) {
-
-        console.error("Could not read trips:", error);
-
-        return [];
-
-    }
-
-}
+let currentUser = null;
 
 
-/* Save trips */
+/* =====================================================
+   PAGE NAVIGATION
+===================================================== */
 
-function saveTrips(trips) {
+function showPage(page) {
 
-    localStorage.setItem(
-        TRIPS_KEY,
-        JSON.stringify(trips)
-    );
+    const pages = [
+        "homePage",
+        "plannerPage",
+        "resultsPage",
+        "tripsPage"
+    ];
 
-}
+    pages.forEach(function(id) {
 
+        const element = document.getElementById(id);
 
-/* Show toast */
-
-function showToast(message) {
-
-    let toast = document.getElementById("toast");
-
-    if (!toast) {
-
-        toast = document.createElement("div");
-
-        toast.id = "toast";
-
-        document.body.appendChild(toast);
-
-    }
-
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-
-    setTimeout(() => {
-
-        toast.classList.remove("show");
-
-    }, 3000);
-
-}
-
-
-/* Generate unique ID */
-
-function generateId() {
-
-    return Date.now().toString() +
-        Math.random().toString(36).substring(2, 9);
-
-}
-
-
-/* Format date */
-
-function formatDate(dateString) {
-
-    if (!dateString) {
-        return "";
-    }
-
-
-    const date = new Date(dateString + "T00:00:00");
-
-
-    if (isNaN(date.getTime())) {
-        return dateString;
-    }
-
-
-    return date.toLocaleDateString(
-        "en-IN",
-        {
-            day: "numeric",
-            month: "short",
-            year: "numeric"
+        if (element) {
+            element.classList.remove("active-page");
         }
-    );
+
+    });
+
+
+    const selectedPage =
+        document.getElementById(page + "Page");
+
+    if (selectedPage) {
+
+        selectedPage.classList.add("active-page");
+
+    }
+
+
+    window.scrollTo(0, 0);
+
+
+    if (page === "trips") {
+
+        loadSavedTrips();
+
+    }
 
 }
 
 
-/* Calculate number of days */
+/* =====================================================
+   DESTINATION
+===================================================== */
+
+function setDestination(place) {
+
+    const input =
+        document.getElementById("destination");
+
+    if (input) {
+
+        input.value = place;
+
+    }
+
+
+    const suggestions =
+        document.getElementById(
+            "destinationSuggestions"
+        );
+
+    if (suggestions) {
+
+        suggestions.style.display = "none";
+
+    }
+
+}
+
+
+function suggestDestination() {
+
+    const suggestions =
+        document.getElementById(
+            "destinationSuggestions"
+        );
+
+    if (!suggestions) {
+        return;
+    }
+
+
+    if (suggestions.style.display === "flex") {
+
+        suggestions.style.display = "none";
+
+    } else {
+
+        suggestions.style.display = "flex";
+
+    }
+
+}
+
+
+/* =====================================================
+   TRAVELLERS
+===================================================== */
+
+function changeTravellers(change) {
+
+    travellerCount =
+        travellerCount + change;
+
+
+    if (travellerCount < 1) {
+
+        travellerCount = 1;
+
+    }
+
+
+    if (travellerCount > 20) {
+
+        travellerCount = 20;
+
+    }
+
+
+    const counter =
+        document.getElementById(
+            "travellerCount"
+        );
+
+
+    if (counter) {
+
+        counter.textContent =
+            travellerCount;
+
+    }
+
+}
+
+
+/* =====================================================
+   INTERESTS
+===================================================== */
+
+function toggleInterest(button) {
+
+    if (!button) {
+        return;
+    }
+
+
+    button.classList.toggle("selected");
+
+
+    const interest =
+        button.textContent.trim();
+
+
+    if (
+        button.classList.contains("selected")
+    ) {
+
+        if (
+            !selectedInterests.includes(interest)
+        ) {
+
+            selectedInterests.push(interest);
+
+        }
+
+    } else {
+
+        selectedInterests =
+            selectedInterests.filter(
+                function(item) {
+
+                    return item !== interest;
+
+                }
+            );
+
+    }
+
+}
+
+
+/* =====================================================
+   TRAVEL STYLE
+===================================================== */
+
+function selectStyle(button) {
+
+    if (!button) {
+        return;
+    }
+
+
+    const cards =
+        document.querySelectorAll(
+            ".style-card"
+        );
+
+
+    cards.forEach(function(card) {
+
+        card.classList.remove("active");
+
+    });
+
+
+    button.classList.add("active");
+
+
+    const name =
+        button.querySelector("strong");
+
+
+    if (name) {
+
+        selectedTravelStyle =
+            name.textContent.trim();
+
+    }
+
+}
+
+
+/* =====================================================
+   CALCULATE DAYS
+===================================================== */
 
 function calculateDays(start, end) {
 
     if (!start || !end) {
-        return 1;
+
+        return 5;
+
     }
 
 
     const startDate =
-        new Date(start + "T00:00:00");
+        new Date(start);
 
     const endDate =
-        new Date(end + "T00:00:00");
+        new Date(end);
 
 
     const difference =
@@ -143,1881 +273,2141 @@ function calculateDays(start, end) {
 
 
     const days =
-        Math.floor(
+        Math.ceil(
             difference /
             (1000 * 60 * 60 * 24)
-        ) + 1;
+        );
 
 
-    return days > 0 ? days : 1;
+    if (days <= 0) {
+
+        return 5;
+
+    }
+
+
+    return days;
 
 }
 
 
-/* =========================================================
-   LOGIN
-========================================================= */
+/* =====================================================
+   CURRENCY
+===================================================== */
 
-const loginForm =
-    document.getElementById("loginForm");
+function formatCurrency(value) {
 
+    return (
+        "₹" +
+        Math.round(value)
+            .toLocaleString("en-IN")
+    );
 
-if (loginForm) {
-
-    loginForm.addEventListener(
-        "submit",
-        function (event) {
-
-            event.preventDefault();
+}
 
 
-            const emailInput =
-                document.getElementById("email");
+/* =====================================================
+   HELPER
+===================================================== */
 
-            const passwordInput =
-                document.getElementById("password");
+function setText(id, value) {
 
-
-            const email =
-                emailInput
-                    ? emailInput.value.trim()
-                    : "";
-
-            const password =
-                passwordInput
-                    ? passwordInput.value
-                    : "";
+    const element =
+        document.getElementById(id);
 
 
-            if (!email || !password) {
+    if (element) {
 
-                showToast(
-                    "Please enter your email and password."
+        element.textContent = value;
+
+    }
+
+}
+
+
+function setBar(id, percentage) {
+
+    const element =
+        document.getElementById(id);
+
+
+    if (element) {
+
+        element.style.width =
+            percentage + "%";
+
+    }
+
+}
+/* =====================================================
+   WEATHER FORECAST
+===================================================== */
+
+async function loadWeather(destination, startDate, endDate) {
+
+    const weatherLocation =
+        document.getElementById("weatherLocation");
+
+    const weatherDays =
+        document.getElementById("weatherDays");
+
+    const mainTemp =
+        document.getElementById("weatherMainTemp");
+
+    const mainCondition =
+        document.getElementById("weatherMainCondition");
+
+    const mainIcon =
+        document.getElementById("weatherMainIcon");
+
+    const recommendation =
+        document.getElementById("weatherRecommendation");
+
+
+    if (!weatherDays) {
+        return;
+    }
+
+
+    weatherDays.innerHTML = `
+        <div class="weather-loading">
+            ✦ Checking destination weather...
+        </div>
+    `;
+
+
+    try {
+
+        /* =================================================
+           STEP 1 — FIND DESTINATION COORDINATES
+        ================================================= */
+
+        const geoResponse =
+            await fetch(
+                "https://geocoding-api.open-meteo.com/v1/search?name=" +
+                encodeURIComponent(destination) +
+                "&count=1&language=en&format=json"
+            );
+
+
+        if (!geoResponse.ok) {
+            throw new Error("Could not find destination.");
+        }
+
+
+        const geoData =
+            await geoResponse.json();
+
+
+        if (
+            !geoData.results ||
+            geoData.results.length === 0
+        ) {
+
+            throw new Error(
+                "Destination not found."
+            );
+
+        }
+
+
+        const location =
+            geoData.results[0];
+
+
+        const latitude =
+            location.latitude;
+
+        const longitude =
+            location.longitude;
+
+
+        if (weatherLocation) {
+
+            weatherLocation.textContent =
+                "Forecast for " +
+                location.name +
+                (location.country
+                    ? ", " + location.country
+                    : "");
+
+        }
+
+
+        /* =================================================
+           STEP 2 — GET WEATHER
+        ================================================= */
+
+        const weatherURL =
+            "https://api.open-meteo.com/v1/forecast" +
+            "?latitude=" + latitude +
+            "&longitude=" + longitude +
+            "&daily=" +
+            "weather_code," +
+            "temperature_2m_max," +
+            "temperature_2m_min," +
+            "precipitation_probability_max," +
+            "precipitation_sum" +
+            "&forecast_days=16" +
+            "&timezone=auto";
+
+
+        const weatherResponse =
+            await fetch(weatherURL);
+
+
+        if (!weatherResponse.ok) {
+            throw new Error(
+                "Weather service unavailable."
+            );
+        }
+
+
+        const weatherData =
+            await weatherResponse.json();
+
+
+        if (!weatherData.daily) {
+            throw new Error(
+                "No weather data available."
+            );
+        }
+
+
+        const daily =
+            weatherData.daily;
+
+
+        /* =================================================
+           STEP 3 — DETERMINE DATES
+        ================================================= */
+
+        let dates = daily.time;
+
+        let startIndex = 0;
+        let endIndex = dates.length - 1;
+
+
+        if (startDate) {
+
+            const foundStart =
+                dates.indexOf(startDate);
+
+            if (foundStart !== -1) {
+                startIndex = foundStart;
+            }
+
+        }
+
+
+        if (endDate) {
+
+            const foundEnd =
+                dates.indexOf(endDate);
+
+            if (foundEnd !== -1) {
+                endIndex = foundEnd;
+            }
+
+        }
+
+
+        /*
+           If the selected trip starts beyond the
+           available forecast, show the available
+           forecast instead.
+        */
+
+        if (startIndex > endIndex) {
+
+            startIndex = 0;
+            endIndex = Math.min(
+                dates.length - 1,
+                6
+            );
+
+        }
+
+
+        /* =================================================
+           STEP 4 — BUILD WEATHER CARDS
+        ================================================= */
+
+        weatherDays.innerHTML = "";
+
+
+        let rainyDays = 0;
+        let totalDays = 0;
+
+
+        for (
+            let i = startIndex;
+            i <= endIndex;
+            i++
+        ) {
+
+            const date =
+                daily.time[i];
+
+            const code =
+                daily.weather_code[i];
+
+            const max =
+                Math.round(
+                    daily.temperature_2m_max[i]
                 );
 
-                return;
+            const min =
+                Math.round(
+                    daily.temperature_2m_min[i]
+                );
+
+            const rain =
+                daily.precipitation_probability_max[i] || 0;
+
+
+            const weatherInfo =
+                getWeatherInfo(code);
+
+
+            if (rain >= 50) {
+                rainyDays++;
+            }
+
+            totalDays++;
+
+
+            const formattedDate =
+                formatWeatherDate(date);
+
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "weather-card";
+
+
+            card.innerHTML = `
+
+                <div class="weather-date">
+                    ${formattedDate}
+                </div>
+
+                <div class="weather-card-icon">
+                    ${weatherInfo.icon}
+                </div>
+
+                <div class="weather-condition">
+                    ${weatherInfo.text}
+                </div>
+
+                <div class="weather-temp">
+
+                    <span class="weather-max">
+                        ${max}°
+                    </span>
+
+                    <span class="weather-min">
+                        ${min}°
+                    </span>
+
+                </div>
+
+                <div class="weather-rain">
+                    ☔ ${rain}% rain
+                </div>
+
+            `;
+
+
+            weatherDays.appendChild(card);
+
+        }
+
+
+        /* =================================================
+           STEP 5 — MAIN WEATHER
+        ================================================= */
+
+        const firstIndex =
+            startIndex;
+
+
+        const firstCode =
+            daily.weather_code[firstIndex];
+
+
+        const firstMax =
+            Math.round(
+                daily.temperature_2m_max[firstIndex]
+            );
+
+
+        const firstInfo =
+            getWeatherInfo(firstCode);
+
+
+        if (mainTemp) {
+            mainTemp.textContent =
+                firstMax + "°";
+        }
+
+
+        if (mainCondition) {
+            mainCondition.textContent =
+                firstInfo.text;
+        }
+
+
+        if (mainIcon) {
+            mainIcon.textContent =
+                firstInfo.icon;
+        }
+
+
+        /* =================================================
+           STEP 6 — TRAVEL RECOMMENDATION
+        ================================================= */
+
+        if (recommendation) {
+
+            if (rainyDays === 0) {
+
+                recommendation.textContent =
+                    "The forecast looks mostly dry. " +
+                    "It is a good time to explore outdoor attractions.";
 
             }
 
+            else if (rainyDays <= Math.ceil(totalDays / 2)) {
 
-            /* Save simple local login */
+                recommendation.textContent =
+                    "Some rain is expected during your trip. " +
+                    "Keep a light rain jacket or umbrella handy " +
+                    "and use indoor activities as backups.";
 
-            const user = {
+            }
 
-                email: email,
+            else {
 
-                loggedIn: true,
+                recommendation.textContent =
+                    "Several rainy days are expected. " +
+                    "Consider prioritizing museums, cafés, " +
+                    "shopping and other indoor experiences.";
 
-                loginTime:
-                    new Date().toISOString()
-
-            };
-
-
-            localStorage.setItem(
-                USER_KEY,
-                JSON.stringify(user)
-            );
-
-
-            showToast(
-                "Login successful! Welcome to Wanderlyst."
-            );
-
-
-            setTimeout(() => {
-
-                window.location.href =
-                    "dashboard.html";
-
-            }, 700);
+            }
 
         }
-    );
-
-}
 
 
+    } catch (error) {
 
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-const logoutBtn =
-    document.getElementById("logoutBtn");
+        console.error(
+            "Weather error:",
+            error
+        );
 
 
-if (logoutBtn) {
+        weatherDays.innerHTML = `
+            <div class="weather-loading">
+                Weather information could not be loaded.
+            </div>
+        `;
 
-    logoutBtn.addEventListener(
-        "click",
-        function () {
 
-            localStorage.removeItem(USER_KEY);
+        if (weatherLocation) {
 
-            window.location.href =
-                "index.html";
+            weatherLocation.textContent =
+                "Weather unavailable for this destination.";
 
         }
-    );
-
-}
-
-
-
-/* =========================================================
-   DESTINATION SUGGESTIONS
-========================================================= */
-
-
-/*
-    IMPORTANT:
-
-    These are ONLY suggestions.
-
-    They do NOT decide the destination.
-
-    Whatever the user actually types is saved.
-*/
-
-const popularDestinations = [
-
-    {
-        city: "Tokyo",
-        country: "Japan"
-    },
-
-    {
-        city: "Paris",
-        country: "France"
-    },
-
-    {
-        city: "London",
-        country: "United Kingdom"
-    },
-
-    {
-        city: "New York",
-        country: "United States"
-    },
-
-    {
-        city: "Dubai",
-        country: "United Arab Emirates"
-    },
-
-    {
-        city: "Singapore",
-        country: "Singapore"
-    },
-
-    {
-        city: "Sydney",
-        country: "Australia"
-    },
-
-    {
-        city: "Rome",
-        country: "Italy"
-    },
-
-    {
-        city: "Barcelona",
-        country: "Spain"
-    },
-
-    {
-        city: "Bali",
-        country: "Indonesia"
-    },
-
-    {
-        city: "Switzerland",
-        country: "Switzerland"
-    },
-
-    {
-        city: "Istanbul",
-        country: "Turkey"
-    },
-
-    {
-        city: "Amsterdam",
-        country: "Netherlands"
-    },
-
-    {
-        city: "Cairo",
-        country: "Egypt"
-    },
-
-    {
-        city: "Ahmedabad",
-        country: "India"
-    },
-
-    {
-        city: "Mumbai",
-        country: "India"
-    },
-
-    {
-        city: "Delhi",
-        country: "India"
-    },
-
-    {
-        city: "Goa",
-        country: "India"
-    }
-
-];
-
-
-const destinationInput =
-    document.getElementById("destination");
-/* =========================================================
-   DESTINATION FROM DISCOVER PAGE
-========================================================= */
-
-if (destinationInput) {
-
-    const selectedDestination =
-        localStorage.getItem(
-            "wanderlystSelectedDestination"
-        );
-
-    if (selectedDestination) {
-
-        destinationInput.value =
-            selectedDestination;
-
-        localStorage.removeItem(
-            "wanderlystSelectedDestination"
-        );
 
     }
 
 }
+/* =====================================================
+   WEATHER CODE DESCRIPTION
+===================================================== */
 
-const destinationSuggestions =
-    document.getElementById(
-        "destinationSuggestions"
-    );
+function getWeatherInfo(code) {
+
+    if (code === 0) {
+
+        return {
+            icon: "☀️",
+            text: "Clear sky"
+        };
+
+    }
 
 
+    if (code === 1 || code === 2) {
 
-if (
-    destinationInput &&
-    destinationSuggestions
-) {
+        return {
+            icon: "🌤️",
+            text: "Partly cloudy"
+        };
+
+    }
 
 
-    /* =====================================================
-       SHOW SUGGESTIONS
-    ====================================================== */
+    if (code === 3) {
 
-    function showDestinationSuggestions(
-        searchText = ""
+        return {
+            icon: "☁️",
+            text: "Cloudy"
+        };
+
+    }
+
+
+    if (
+        code === 45 ||
+        code === 48
     ) {
 
+        return {
+            icon: "🌫️",
+            text: "Foggy"
+        };
 
-        const query =
-            searchText
-                .trim()
-                .toLowerCase();
-
-
-        let results;
+    }
 
 
-        if (query === "") {
+    if (
+        code >= 51 &&
+        code <= 67
+    ) {
 
-            results =
-                popularDestinations.slice(0, 6);
+        return {
+            icon: "🌧️",
+            text: "Rain"
+        };
 
-        } else {
-
-            results =
-                popularDestinations.filter(
-                    destination => {
-
-                        const city =
-                            destination.city
-                                .toLowerCase();
-
-                        const country =
-                            destination.country
-                                .toLowerCase();
+    }
 
 
-                        return (
-                            city.includes(query) ||
-                            country.includes(query)
-                        );
+    if (
+        code >= 71 &&
+        code <= 77
+    ) {
 
-                    }
-                ).slice(0, 6);
+        return {
+            icon: "❄️",
+            text: "Snow"
+        };
 
+    }
+
+
+    if (
+        code >= 80 &&
+        code <= 82
+    ) {
+
+        return {
+            icon: "🌦️",
+            text: "Rain showers"
+        };
+
+    }
+
+
+    if (
+        code >= 95
+    ) {
+
+        return {
+            icon: "⛈️",
+            text: "Thunderstorm"
+        };
+
+    }
+
+
+    return {
+        icon: "🌤️",
+        text: "Variable weather"
+    };
+
+}
+/* =====================================================
+   WEATHER DATE FORMAT
+===================================================== */
+
+function formatWeatherDate(dateString) {
+
+    const date =
+        new Date(dateString + "T00:00:00");
+
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            weekday: "short",
+            day: "numeric",
+            month: "short"
         }
+    );
+
+}
+/* =====================================================
+   GENERATE TRIP
+===================================================== */
+
+function generateTrip() {
+
+    const destinationElement =
+        document.getElementById(
+            "destination"
+        );
 
 
-        if (results.length === 0) {
+    const budgetElement =
+        document.getElementById(
+            "budget"
+        );
 
-            destinationSuggestions.innerHTML = "";
 
-            destinationSuggestions.classList.remove(
-                "show"
+    const startElement =
+        document.getElementById(
+            "startDate"
+        );
+
+
+    const endElement =
+        document.getElementById(
+            "endDate"
+        );
+
+
+    if (
+        !destinationElement ||
+        !budgetElement
+    ) {
+
+        return;
+
+    }
+
+
+    const destination =
+        destinationElement.value.trim();
+
+
+    const budget =
+        Number(
+            budgetElement.value
+        );
+
+
+    const startDate =
+        startElement
+            ? startElement.value
+            : "";
+
+
+    const endDate =
+        endElement
+            ? endElement.value
+            : "";
+
+
+    /* VALIDATION */
+
+    if (destination === "") {
+
+        alert(
+            "Please choose a destination."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        budget < 1000 ||
+        isNaN(budget)
+    ) {
+
+        alert(
+            "Please enter a valid budget."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        startDate !== "" &&
+        endDate !== ""
+    ) {
+
+        const start =
+            new Date(startDate);
+
+        const end =
+            new Date(endDate);
+
+
+        if (end < start) {
+
+            alert(
+                "Return date cannot be before departure date."
             );
 
             return;
 
         }
 
-
-        destinationSuggestions.innerHTML =
-            results.map(
-                destination => {
-
-                    return `
-
-                        <button
-                            type="button"
-                            class="destination-option"
-                            data-city="${destination.city}"
-                            data-country="${destination.country}"
-                        >
-
-                            <span class="destination-option-icon">
-
-                                <i class="fa-solid fa-location-dot"></i>
-
-                            </span>
+    }
 
 
-                            <span>
-
-                                <strong>
-                                    ${destination.city}
-                                </strong>
-
-                                <small>
-                                    ${destination.country}
-                                </small>
-
-                            </span>
-
-                        </button>
-
-                    `;
-
-                }
-            ).join("");
-
-
-        destinationSuggestions.classList.add(
-            "show"
+    const days =
+        calculateDays(
+            startDate,
+            endDate
         );
 
+
+    /* BUDGET */
+
+   const hotel =
+    budget * 0.35;
+
+const transport =
+    budget * 0.25;
+
+const food =
+    budget * 0.15;
+
+const activities =
+    budget * 0.15;
+
+const emergency =
+    budget * 0.10;
+
+    /* CURRENT TRIP */
+
+    currentTrip = {
+
+        destination:
+            destination,
+
+        budget:
+            budget,
+
+        travellers:
+            travellerCount,
+
+        days:
+            days,
+
+        startDate:
+            startDate,
+
+        endDate:
+            endDate,
+
+        interests:
+            selectedInterests.slice(),
+
+        travelStyle:
+            selectedTravelStyle
+
+    };
+
+loadWeather(
+    destination,
+    startDate,
+    endDate
+);
+    /* RESULT */
+
+    setText(
+        "resultDestination",
+        destination
+    );
+
+
+    setText(
+        "resultDetails",
+        days +
+        " days - " +
+        travellerCount +
+        " travellers"
+    );
+
+
+    setText(
+        "resultBudget",
+        formatCurrency(budget)
+    );
+
+
+    setText(
+        "resultHotel",
+        formatCurrency(hotel)
+    );
+
+
+    setText(
+        "resultTransport",
+        formatCurrency(transport)
+    );
+
+
+    setText(
+        "resultFood",
+        formatCurrency(food)
+    );
+
+
+    setText(
+        "resultActivities",
+        formatCurrency(activities)
+    );
+
+setText(
+    "resultEmergency",
+    formatCurrency(emergency)
+);
+    setBar(
+        "hotelBar",
+        35
+    );
+
+
+    setBar(
+        "transportBar",
+        25
+    );
+
+
+    setBar(
+        "foodBar",
+        15
+    );
+
+
+    setBar(
+        "activitiesBar",
+        15
+    );
+setBar("emergencyBar", 10);
+setText(
+    "plannerTotal",
+    formatCurrency(budget)
+);
+
+setText(
+    "plannerHotel",
+    formatCurrency(hotel)
+);
+
+setText(
+    "plannerTransport",
+    formatCurrency(transport)
+);
+
+setText(
+    "plannerFood",
+    formatCurrency(food)
+);
+
+setText(
+    "plannerActivities",
+    formatCurrency(activities)
+);
+
+setText(
+    "plannerEmergency",
+    formatCurrency(emergency)
+);
+    /* MAP */
+
+    updateMap(destination);
+
+
+    showPage("results");
+
+}
+
+
+/* =====================================================
+   SAVE TRIP TO SUPABASE
+===================================================== */
+
+async function saveTrip() {
+
+    if (!currentTrip) {
+        alert("Please create a journey first.");
+        return;
+    }
+
+    // Get currently signed-in user
+    const {
+        data: { user },
+        error: userError
+    } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        alert("Please sign in before saving your journey.");
+        openLogin();
+        return;
+    }
+
+    // Create trip name
+    const tripName =
+        currentTrip.destination + " Journey";
+
+    // Save trip to Supabase
+    const { data, error } = await supabaseClient
+        .from("trips")
+        .insert([
+            {
+                user_id: user.id,
+
+                trip_name: tripName,
+
+                destination: currentTrip.destination,
+
+                start_date:
+                    currentTrip.startDate || null,
+
+                end_date:
+                    currentTrip.endDate || null,
+
+                travelers:
+                    currentTrip.travellers,
+
+                budget:
+                    currentTrip.budget,
+
+                currency: "INR",
+
+                status: "planned"
+            }
+        ])
+        .select();
+
+    if (error) {
+
+        console.error("Save trip error:", error);
+
+        alert(
+            "Could not save journey:\n\n" +
+            error.message
+        );
+
+        return;
+    }
+
+    console.log(
+        "Trip saved successfully:",
+        data
+    );
+
+    alert("Journey saved ✦");
+
+    // Reload My Trips
+    loadSavedTrips();
+}
+/* =====================================================
+   LOAD SAVED TRIPS FROM SUPABASE
+===================================================== */
+
+async function loadSavedTrips() {
+
+    const container =
+        document.getElementById(
+            "savedTripsContainer"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    /* GET USER */
+
+    const {
+        data: {
+            user
+        }
+    } =
+        await supabaseClient.auth.getUser();
+
+
+    if (!user) {
+
+        container.innerHTML = `
+
+            <div class="empty-trips">
+
+                <div class="section-tag">
+                    SIGN IN REQUIRED
+                </div>
+
+                <h2>
+                    Your journeys are
+                    <br>
+                    <em>waiting for you.</em>
+                </h2>
+
+                <p>
+                    Sign in to save and view
+                    your journeys.
+                </p>
+
+                <button
+                    class="create-trip-button"
+                    onclick="openLogin()"
+                >
+                    <span>
+                        Sign in
+                    </span>
+
+                    <strong>
+                        →
+                    </strong>
+
+                </button>
+
+            </div>
+
+        `;
+
+        return;
 
     }
 
 
+    currentUser = user;
 
-    /* =====================================================
-       INPUT EVENT
-    ====================================================== */
 
-    destinationInput.addEventListener(
-        "input",
-        function () {
+    /* GET TRIPS */
 
-            showDestinationSuggestions(
-                destinationInput.value
+    const {
+        data: trips,
+        error
+    } =
+        await supabaseClient
+            .from("trips")
+            .select("*")
+            .eq(
+                "user_id",
+                user.id
+            )
+            .order(
+                "id",
+                {
+                    ascending: false
+                }
             );
 
-        }
-    );
+
+    if (error) {
+
+        console.error(
+            "Load trips error:",
+            error
+        );
 
 
+        container.innerHTML = `
 
-    /* =====================================================
-       FOCUS
-    ====================================================== */
+            <div class="empty-trips">
 
-    destinationInput.addEventListener(
-        "focus",
-        function () {
+                <h2>
+                    Something went wrong.
+                </h2>
 
-            showDestinationSuggestions(
-                destinationInput.value
-            );
+                <p>
+                    We could not load your journeys.
+                </p>
 
-        }
-    );
+            </div>
 
+        `;
 
+        return;
 
-    /* =====================================================
-       CLICK SUGGESTION
-    ====================================================== */
-
-    destinationSuggestions.addEventListener(
-        "click",
-        function (event) {
+    }
 
 
-            const option =
-                event.target.closest(
-                    ".destination-option"
+    /* EMPTY */
+
+    if (
+        !trips ||
+        trips.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="empty-trips">
+
+                <div class="section-tag">
+                    NOTHING HERE YET
+                </div>
+
+                <h2>
+                    Your next adventure
+                    <br>
+                    <em>starts here.</em>
+                </h2>
+
+                <p>
+                    Create your first journey
+                    and we'll keep it here.
+                </p>
+
+                <button
+                    class="create-trip-button"
+                    onclick="showPage('planner')"
+                >
+
+                    <span>
+                        Plan a journey
+                    </span>
+
+                    <strong>
+                        ↗
+                    </strong>
+
+                </button>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /* CLEAR */
+
+    container.innerHTML = "";
+
+
+    /* CREATE CARDS */
+
+    trips.forEach(
+        function(trip) {
+
+            const card =
+                document.createElement(
+                    "div"
                 );
 
 
-            if (!option) {
-                return;
-            }
+            card.className =
+                "saved-trip-card";
 
 
-            const city =
-                option.dataset.city;
+            const content =
+                document.createElement(
+                    "div"
+                );
 
 
-            const country =
-                option.dataset.country;
+            const tag =
+                document.createElement(
+                    "div"
+                );
 
 
-            destinationInput.value =
-                `${city}, ${country}`;
+            tag.className =
+                "section-tag";
 
 
-            destinationSuggestions.classList.remove(
-                "show"
-            );
-
-        }
-    );
+            tag.textContent =
+                "SAVED JOURNEY";
 
 
+            const title =
+                document.createElement(
+                    "h3"
+                );
 
-    /* =====================================================
-       CLICK OUTSIDE
-    ====================================================== */
 
-    document.addEventListener(
-        "click",
-        function (event) {
+            title.textContent =
+                trip.destination;
+
+
+            const info =
+                document.createElement(
+                    "p"
+                );
+
+
+            let dateText = "";
+
 
             if (
-                !destinationInput.contains(
-                    event.target
-                ) &&
-                !destinationSuggestions.contains(
-                    event.target
-                )
+                trip.start_date &&
+                trip.end_date
             ) {
 
-                destinationSuggestions.classList.remove(
-                    "show"
-                );
+                dateText =
+                    trip.start_date +
+                    " → " +
+                    trip.end_date;
 
             }
 
+
+            info.textContent =
+                dateText;
+
+
+            content.appendChild(tag);
+
+            content.appendChild(title);
+
+            content.appendChild(info);
+
+
+           const actions =
+    document.createElement("div");
+
+actions.className =
+    "saved-trip-actions";
+
+
+const viewButton =
+    document.createElement("button");
+
+viewButton.textContent =
+    "View journey →";
+
+
+viewButton.addEventListener(
+    "click",
+    function() {
+
+        openSavedTrip(trip.id);
+
+    }
+);
+
+
+const deleteButton =
+    document.createElement("button");
+
+deleteButton.textContent =
+    "Delete";
+
+
+deleteButton.className =
+    "delete-trip-button";
+
+
+deleteButton.addEventListener(
+    "click",
+    function() {
+
+        deleteTrip(trip.id);
+
+    }
+);
+
+
+actions.appendChild(viewButton);
+actions.appendChild(deleteButton);
+
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    openSavedTrip(
+                        trip
+                    );
+
+                }
+            );
+
+card.appendChild(content);
+card.appendChild(actions);
+
+container.appendChild(card);
         }
     );
 
 }
 
+/* =====================================================
+   DELETE SAVED TRIP
+===================================================== */
+
+function deleteTrip(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this journey?"
+        );
 
 
-/* =========================================================
-   PLAN TRIP
-========================================================= */
-
-const tripForm =
-    document.getElementById("tripForm");
+    if (!confirmed) {
+        return;
+    }
 
 
-if (tripForm) {
+    let trips = [];
+
+    try {
+
+        trips =
+            JSON.parse(
+                localStorage.getItem(
+                    "wanderlystTrips"
+                )
+            ) || [];
+
+    } catch (error) {
+
+        trips = [];
+
+    }
 
 
-    /* =====================================================
-       SET MINIMUM DATE
-    ====================================================== */
+    trips =
+        trips.filter(function(trip) {
+
+            return trip.id !== id;
+
+        });
+
+
+    localStorage.setItem(
+        "wanderlystTrips",
+        JSON.stringify(trips)
+    );
+
+
+    loadSavedTrips();
+
+
+    alert("Journey deleted.");
+}
+/* =====================================================
+   OPEN SAVED TRIP
+===================================================== */
+
+function openSavedTrip(trip) {
+
+    if (!trip) {
+        return;
+    }
+
+
+    currentTrip = {
+
+        id:
+            trip.id,
+
+        destination:
+            trip.destination,
+
+        startDate:
+            trip.start_date || "",
+
+        endDate:
+            trip.end_date || "",
+
+        travellers:
+            2,
+
+        days:
+            calculateDays(
+                trip.start_date,
+                trip.end_date
+            ),
+
+        budget:
+            0,
+
+        interests:
+            [],
+
+        travelStyle:
+            "Budget"
+
+    };
+
+
+    const destination =
+        document.getElementById(
+            "destination"
+        );
+
+
+    if (destination) {
+
+        destination.value =
+            trip.destination;
+
+    }
+
 
     const startDate =
-        document.getElementById("startDate");
-
-
-    const endDate =
-        document.getElementById("endDate");
-
-
-    const today =
-        new Date()
-            .toISOString()
-            .split("T")[0];
+        document.getElementById(
+            "startDate"
+        );
 
 
     if (startDate) {
 
-        startDate.min = today;
+        startDate.value =
+            trip.start_date || "";
 
     }
+
+
+    const endDate =
+        document.getElementById(
+            "endDate"
+        );
 
 
     if (endDate) {
 
-        endDate.min = today;
+        endDate.value =
+            trip.end_date || "";
 
     }
 
 
+currentTrip = trip;
 
-    /* =====================================================
-       START DATE CHANGES
-    ====================================================== */
+updateResultsFromTrip(trip);
 
-    if (startDate && endDate) {
+loadWeather(
+    trip.destination,
+    trip.startDate,
+    trip.endDate
+);
 
-        startDate.addEventListener(
-            "change",
-            function () {
-
-                endDate.min =
-                    startDate.value;
-
-
-                if (
-                    endDate.value &&
-                    endDate.value <
-                    startDate.value
-                ) {
-
-                    endDate.value = "";
-
-                }
-
-            }
-        );
-
-    }
-
-
-
-    /* =====================================================
-       FORM SUBMISSION
-    ====================================================== */
-
-    tripForm.addEventListener(
-        "submit",
-        function (event) {
-
-            event.preventDefault();
-
-
-            /* ---------------------------------------------
-               GET VALUES
-            --------------------------------------------- */
-
-            const tripName =
-                document
-                    .getElementById("tripName")
-                    .value
-                    .trim();
-
-
-            const destination =
-                document
-                    .getElementById("destination")
-                    .value
-                    .trim();
-
-
-            const tripStartDate =
-                document
-                    .getElementById("startDate")
-                    .value;
-
-
-            const tripEndDate =
-                document
-                    .getElementById("endDate")
-                    .value;
-
-
-            const travellers =
-                Number(
-                    document
-                        .getElementById("travellers")
-                        .value
-                );
-
-
-            const style =
-                document
-                    .getElementById("style")
-                    .value;
-
-
-            const descriptionElement =
-                document.getElementById(
-                    "description"
-                );
-
-
-            const description =
-                descriptionElement
-                    ? descriptionElement.value.trim()
-                    : "";
-
-
-
-            /* ---------------------------------------------
-               VALIDATION
-            --------------------------------------------- */
-
-            if (!tripName) {
-
-                showToast(
-                    "Please enter a trip name."
-                );
-
-                return;
-
-            }
-
-
-            if (!destination) {
-
-                showToast(
-                    "Please enter a destination."
-                );
-
-                return;
-
-            }
-
-
-            if (!tripStartDate) {
-
-                showToast(
-                    "Please select a start date."
-                );
-
-                return;
-
-            }
-
-
-            if (!tripEndDate) {
-
-                showToast(
-                    "Please select an end date."
-                );
-
-                return;
-
-            }
-
-
-            if (
-                new Date(tripEndDate) <
-                new Date(tripStartDate)
-            ) {
-
-                showToast(
-                    "End date cannot be before start date."
-                );
-
-                return;
-
-            }
-
-
-            if (
-                !travellers ||
-                travellers < 1
-            ) {
-
-                showToast(
-                    "Please enter at least one traveller."
-                );
-
-                return;
-
-            }
-
-
-
-            /* ---------------------------------------------
-               CREATE TRIP OBJECT
-            --------------------------------------------- */
-
-            const trip = {
-
-                id: generateId(),
-
-                name: tripName,
-
-                /*
-                    THIS IS THE IMPORTANT PART.
-
-                    We save EXACTLY what the user entered.
-
-                    There is NO Paris fallback.
-                */
-
-                destination: destination,
-
-                startDate: tripStartDate,
-
-                endDate: tripEndDate,
-
-                travellers: travellers,
-
-                style: style,
-
-                description: description,
-
-                days: calculateDays(
-                    tripStartDate,
-                    tripEndDate
-                ),
-
-                createdAt:
-                    new Date().toISOString()
-
-            };
-
-
-
-            /* ---------------------------------------------
-               GET OLD TRIPS
-            --------------------------------------------- */
-
-            const trips =
-                getTrips();
-
-
-
-            /* ---------------------------------------------
-               SAVE NEW TRIP
-            --------------------------------------------- */
-
-            trips.push(trip);
-
-
-            saveTrips(trips);
-
-
-
-            /* ---------------------------------------------
-               SAVE CURRENT TRIP
-            --------------------------------------------- */
-
-            localStorage.setItem(
-                CURRENT_TRIP_KEY,
-                JSON.stringify(trip)
-            );
-
-
-
-            /* ---------------------------------------------
-               SUCCESS
-            --------------------------------------------- */
-
-            showToast(
-                `${destination} has been added to your trips!`
-            );
-
-
-            console.log(
-                "Wanderlyst trip created:",
-                trip
-            );
-
-
-
-            /* ---------------------------------------------
-               GO TO ITINERARY
-            --------------------------------------------- */
-
-            setTimeout(
-                function () {
-
-                    window.location.href =
-                        "itinerary.html";
-
-                },
-                700
-            );
-
-        }
-    );
-
+showPage("results");
 }
 
+/* =====================================================
+   UPDATE RESULTS
+===================================================== */
 
+function updateResultsFromTrip(trip) {
 
-/* =========================================================
-   ITINERARY PAGE
-========================================================= */
-
-const itineraryDays =
-    document.getElementById(
-        "itineraryDays"
+    setText(
+        "resultDestination",
+        trip.destination
     );
 
 
-if (itineraryDays) {
+    setText(
+        "resultDetails",
+
+        trip.days +
+        " days - " +
+        trip.travellers +
+        " travellers"
+
+    );
 
 
-    /* =====================================================
-       GET CURRENT TRIP
-    ====================================================== */
+    if (trip.budget) {
 
-    const currentTripData =
-        localStorage.getItem(
-            CURRENT_TRIP_KEY
+        const budget =
+            Number(trip.budget);
+
+
+        setText(
+            "resultBudget",
+            formatCurrency(budget)
         );
 
 
-    if (!currentTripData) {
-
-        showToast(
-            "No trip found. Please create a trip first."
+        setText(
+            "resultHotel",
+            formatCurrency(
+                budget * 0.35
+            )
         );
 
 
-        setTimeout(
-            function () {
-
-                window.location.href =
-                    "plan.html";
-
-            },
-            1200
+        setText(
+            "resultTransport",
+            formatCurrency(
+                budget * 0.25
+            )
         );
 
 
-    } else {
+        setText(
+            "resultFood",
+            formatCurrency(
+                budget * 0.15
+            )
+        );
 
 
-        try {
-
-
-            const trip =
-                JSON.parse(
-                    currentTripData
-                );
-
-
-            /* =============================================
-               DISPLAY TRIP INFORMATION
-            ============================================== */
-
-            const tripNameElement =
-                document.getElementById(
-                    "itineraryTripName"
-                );
-
-
-            const destinationElement =
-                document.getElementById(
-                    "itineraryDestination"
-                );
-
-
-            const datesElement =
-                document.getElementById(
-                    "itineraryDates"
-                );
-
-
-            const travellersElement =
-                document.getElementById(
-                    "itineraryTravellers"
-                );
-
-
-            const styleElement =
-                document.getElementById(
-                    "itineraryStyle"
-                );
-
-
-            const descriptionElement =
-                document.getElementById(
-                    "itineraryDescription"
-                );
-
-
-
-            if (tripNameElement) {
-
-                tripNameElement.textContent =
-                    trip.name;
-
-            }
-
-
-            if (destinationElement) {
-
-                destinationElement.innerHTML = `
-
-                    <i
-                        class="fa-solid fa-location-dot"
-                        style="color:#d9a35f;"
-                    ></i>
-
-                    ${trip.destination}
-
-                `;
-
-            }
-
-
-            if (datesElement) {
-
-                datesElement.textContent =
-                    `${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}`;
-
-            }
-
-
-            if (travellersElement) {
-
-                travellersElement.textContent =
-                    `${trip.travellers} Traveller${trip.travellers == 1 ? "" : "s"}`;
-
-            }
-
-
-            if (styleElement) {
-
-                styleElement.textContent =
-                    trip.style;
-
-            }
-
-
-            if (descriptionElement) {
-
-                descriptionElement.textContent =
-                    trip.description ||
-                    `Explore the best of ${trip.destination}.`;
-
-            }
-
-
-
-            /* =============================================
-               GENERATE ITINERARY
-            ============================================== */
-
-            generateItinerary(trip);
-
-
-        } catch (error) {
-
-            console.error(
-                "Could not load current trip:",
-                error
-            );
-
-
-            showToast(
-                "There was a problem loading your trip."
-            );
-
-        }
+        setText(
+            "resultActivities",
+            formatCurrency(
+                budget * 0.15
+            )
+        );
 
     }
 
 }
 
 
+/* =====================================================
+   LOGIN MODAL
+===================================================== */
 
-/* =========================================================
-   GENERATE ITINERARY
-========================================================= */
+function openLogin() {
 
-function generateItinerary(trip) {
-
-
-    const container =
+    const modal =
         document.getElementById(
-            "itineraryDays"
+            "loginModal"
         );
 
 
-    if (!container) {
-        return;
+    if (modal) {
+
+        modal.classList.add(
+            "show"
+        );
+
     }
 
+}
 
-    const numberOfDays =
-        trip.days ||
-        calculateDays(
-            trip.startDate,
-            trip.endDate
+
+function closeLogin() {
+
+    const modal =
+        document.getElementById(
+            "loginModal"
         );
 
 
-    const activities = [
+    if (modal) {
 
-        {
-            icon: "fa-map-location-dot",
+        modal.classList.remove(
+            "show"
+        );
 
-            title: "Explore the city",
+    }
 
-            description:
-                "Start your journey by exploring the most interesting places around your destination."
-
-        },
-
-        {
-            icon: "fa-utensils",
-
-            title: "Taste the local cuisine",
-
-            description:
-                "Discover local restaurants, traditional dishes and hidden food spots."
-
-        },
-
-        {
-            icon: "fa-camera",
-
-            title: "Discover iconic places",
-
-            description:
-                "Visit famous landmarks and capture memorable moments."
-
-        },
-
-        {
-            icon: "fa-person-hiking",
-
-            title: "Adventure & exploration",
-
-            description:
-                "Spend the day discovering something new and experiencing the local culture."
-
-        },
-
-        {
-            icon: "fa-mug-hot",
-
-            title: "Relax and enjoy",
-
-            description:
-                "Slow down, enjoy the atmosphere and experience the destination at your own pace."
-
-        },
-
-        {
-            icon: "fa-landmark",
-
-            title: "Culture & history",
-
-            description:
-                "Explore museums, historical landmarks and stories that make the destination unique."
-
-        },
-
-        {
-            icon: "fa-sun",
-
-            title: "Final day",
-
-            description:
-                "Enjoy your final moments, shop for souvenirs and prepare for your journey home."
-
-        }
-
-    ];
+}
 
 
-    let html = "";
+/* =====================================================
+   SIGN IN
+===================================================== */
+
+async function signIn() {
+
+    const email =
+        document.getElementById(
+            "loginEmail"
+        );
 
 
-    for (
-        let day = 1;
-        day <= numberOfDays;
-        day++
+    const password =
+        document.getElementById(
+            "loginPassword"
+        );
+
+
+    const message =
+        document.getElementById(
+            "loginMessage"
+        );
+
+
+    if (
+        !email ||
+        !password
     ) {
 
-
-        const activity =
-            activities[
-                (day - 1) %
-                activities.length
-            ];
-
-
-        const date =
-            new Date(
-                trip.startDate +
-                "T00:00:00"
-            );
-
-
-        date.setDate(
-            date.getDate() + day - 1
-        );
-
-
-        const dateText =
-            date.toLocaleDateString(
-                "en-IN",
-                {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long"
-                }
-            );
-
-
-        html += `
-
-            <div class="itinerary-day">
-
-
-                <div class="day-number">
-
-                    <span>
-                        DAY
-                    </span>
-
-                    <strong>
-                        ${day}
-                    </strong>
-
-                </div>
-
-
-                <div class="day-content">
-
-
-                    <div class="day-date">
-
-                        ${dateText}
-
-                    </div>
-
-
-                    <div class="activity">
-
-
-                        <div class="activity-icon">
-
-                            <i
-                                class="fa-solid ${activity.icon}"
-                            ></i>
-
-                        </div>
-
-
-                        <div>
-
-                            <h3>
-                                ${activity.title}
-                            </h3>
-
-
-                            <p>
-
-                                ${activity.description}
-
-                            </p>
-
-
-                            <p
-                                style="
-                                    margin-top:5px;
-                                    color:#d9a35f;
-                                    font-weight:500;
-                                "
-                            >
-
-                                📍 ${trip.destination}
-
-                            </p>
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-
-            </div>
-
-        `;
+        return;
 
     }
 
 
-    container.innerHTML =
-        html;
+    const emailValue =
+        email.value.trim();
+
+
+    const passwordValue =
+        password.value;
+
+
+    if (
+        !emailValue ||
+        !passwordValue
+    ) {
+
+        if (message) {
+
+            message.textContent =
+                "Please enter your email and password.";
+
+        }
+
+        return;
+
+    }
+
+
+    if (message) {
+
+        message.textContent =
+            "Signing in...";
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth.signInWithPassword({
+
+            email:
+                emailValue,
+
+            password:
+                passwordValue
+
+        });
+
+
+    if (error) {
+
+        console.error(
+            "Sign in error:",
+            error
+        );
+
+
+        if (message) {
+
+            message.textContent =
+                error.message;
+
+        }
+
+        return;
+
+    }
+
+
+    currentUser =
+        data.user;
+
+
+    if (message) {
+
+        message.textContent =
+            "Signed in successfully!";
+
+    }
+
+
+    await updateUserWelcome();
+
+
+    setTimeout(
+        function() {
+
+            closeLogin();
+
+        },
+        700
+    );
 
 }
 
 
+/* =====================================================
+   SIGN UP
+===================================================== */
 
-/* =========================================================
-   DELETE CURRENT TRIP
-========================================================= */
+async function signUp() {
 
-const deleteTripBtn =
-    document.getElementById(
-        "deleteTripBtn"
+    const email =
+        document.getElementById(
+            "loginEmail"
+        );
+
+
+    const password =
+        document.getElementById(
+            "loginPassword"
+        );
+
+
+    const message =
+        document.getElementById(
+            "loginMessage"
+        );
+
+
+    if (
+        !email ||
+        !password
+    ) {
+
+        return;
+
+    }
+
+
+    const emailValue =
+        email.value.trim();
+
+
+    const passwordValue =
+        password.value;
+
+
+    if (
+        emailValue === "" ||
+        passwordValue === ""
+    ) {
+
+        if (message) {
+
+            message.textContent =
+                "Enter an email and password first.";
+
+        }
+
+        return;
+
+    }
+
+
+    if (message) {
+
+        message.textContent =
+            "Creating account...";
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth.signUp({
+
+            email:
+                emailValue,
+
+            password:
+                passwordValue
+
+        });
+
+
+    if (error) {
+
+        console.error(
+            "Sign up error:",
+            error
+        );
+
+
+        if (message) {
+
+            message.textContent =
+                error.message;
+
+        }
+
+        return;
+
+    }
+
+
+    console.log(
+        "Account created:",
+        data
     );
 
 
-if (deleteTripBtn) {
+    if (message) {
 
-    deleteTripBtn.addEventListener(
-        "click",
-        function () {
+        message.textContent =
+            "Account created! Check your email.";
 
+    }
 
-            const currentTripData =
-                localStorage.getItem(
-                    CURRENT_TRIP_KEY
-                );
+}
 
 
-            if (!currentTripData) {
+/* =====================================================
+   USER PROFILE / WELCOME
+===================================================== */
 
-                window.location.href =
-                    "trips.html";
+async function updateUserWelcome() {
 
-                return;
-
-            }
-
-
-            const trip =
-                JSON.parse(
-                    currentTripData
-                );
+    const {
+        data: {
+            user
+        }
+    } =
+        await supabaseClient.auth.getUser();
 
 
-            const trips =
-                getTrips();
+    if (!user) {
+        return;
+    }
 
 
-            const remainingTrips =
-                trips.filter(
-                    savedTrip =>
-                        savedTrip.id !==
-                        trip.id
-                );
+    currentUser = user;
 
 
-            saveTrips(
-                remainingTrips
-            );
+    const {
+        data: profile,
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "full_name, email"
+            )
+            .eq(
+                "id",
+                user.id
+            )
+            .maybeSingle();
 
 
-            localStorage.removeItem(
-                CURRENT_TRIP_KEY
-            );
+    if (error) {
+
+        console.error(
+            "Profile error:",
+            error
+        );
+
+    }
 
 
-            showToast(
-                "Trip deleted successfully."
-            );
+    let userName =
+        "Traveller";
 
 
-            setTimeout(
-                function () {
+    if (
+        profile &&
+        profile.full_name
+    ) {
 
-                    window.location.href =
-                        "trips.html";
+        userName =
+            profile.full_name;
 
-                },
-                700
-            );
+    } else if (
+        user.email
+    ) {
+
+        userName =
+            user.email.split("@")[0];
+
+    }
+
+
+    /* FIND WELCOME ELEMENT */
+
+    const welcomeElements =
+        document.querySelectorAll(
+            ".welcome-user"
+        );
+
+
+    welcomeElements.forEach(
+        function(element) {
+
+            element.textContent =
+                "Welcome, " +
+                userName;
 
         }
     );
 
+
+    /* NAV LOGIN BUTTON */
+
+    const loginButton =
+        document.querySelector(
+            ".nav-login"
+        );
+
+
+    if (loginButton) {
+
+        loginButton.textContent =
+            "Welcome, " +
+            userName;
+
+    }
+
 }
 
 
+/* =====================================================
+   SIGN OUT
+===================================================== */
 
-/* =========================================================
-   MY TRIPS PAGE
-========================================================= */
+async function signOut() {
 
-const tripsContainer =
-    document.getElementById(
-        "tripsContainer"
+    const {
+        error
+    } =
+        await supabaseClient.auth.signOut();
+
+
+    if (error) {
+
+        console.error(
+            "Sign out error:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    currentUser = null;
+
+
+    alert(
+        "Signed out successfully."
     );
 
 
-if (tripsContainer) {
-
-    renderTrips();
+    location.reload();
 
 }
 
 
+/* =====================================================
+   MAP
+===================================================== */
 
-/* =========================================================
-   RENDER TRIPS
-========================================================= */
+function updateMap(destination) {
 
-function renderTrips() {
+    if (!destination) {
+        return;
+    }
 
 
-    const container =
+    const mapCity =
+        document.querySelector(
+            ".map-city"
+        );
+
+
+    if (mapCity) {
+
+        mapCity.textContent =
+            destination;
+
+    }
+
+
+    const mapLink =
         document.getElementById(
-            "tripsContainer"
+            "mapLink"
         );
 
 
-    if (!container) {
-        return;
-    }
-
-
-    const trips =
-        getTrips();
-
-
-    if (trips.length === 0) {
-
-        container.innerHTML = `
-
-            <div class="empty-trips">
-
-                <div class="empty-icon">
-
-                    <i class="fa-solid fa-suitcase-rolling"></i>
-
-                </div>
-
-
-                <h2>
-                    No trips yet
-                </h2>
-
-
-                <p>
-                    Your next adventure is waiting to be planned.
-                </p>
-
-
-                <a
-                    href="plan.html"
-                    class="primary-button"
-                >
-
-                    <i class="fa-solid fa-plus"></i>
-
-                    PLAN YOUR FIRST TRIP
-
-                </a>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-
-    container.innerHTML =
-        trips
-            .slice()
-            .reverse()
-            .map(
-                trip => `
-
-                    <div
-                        class="trip-card"
-                        data-trip-id="${trip.id}"
-                    >
-
-
-                        <div class="trip-card-image">
-
-                            <i class="fa-solid fa-earth-americas"></i>
-
-                        </div>
-
-
-                        <div class="trip-card-content">
-
-
-                            <span class="trip-style">
-
-                                ${trip.style}
-
-                            </span>
-
-
-                            <h3>
-
-                                ${trip.name}
-
-                            </h3>
-
-
-                            <div class="trip-location">
-
-                                <i class="fa-solid fa-location-dot"></i>
-
-                                ${trip.destination}
-
-                            </div>
-
-
-                            <div class="trip-dates">
-
-                                <i class="fa-regular fa-calendar"></i>
-
-                                ${formatDate(trip.startDate)}
-                                -
-                                ${formatDate(trip.endDate)}
-
-                            </div>
-
-
-                            <div class="trip-travellers">
-
-                                <i class="fa-solid fa-users"></i>
-
-                                ${trip.travellers}
-                                Traveller${trip.travellers == 1 ? "" : "s"}
-
-                            </div>
-
-
-                        </div>
-
-
-                        <div class="trip-card-actions">
-
-
-                            <button
-                                class="trip-open"
-                                data-action="open"
-                                data-id="${trip.id}"
-                                title="Open trip"
-                            >
-
-                                <i class="fa-solid fa-arrow-right"></i>
-
-                            </button>
-
-
-                            <button
-                                class="trip-delete"
-                                data-action="delete"
-                                data-id="${trip.id}"
-                                title="Delete trip"
-                            >
-
-                                <i class="fa-solid fa-trash"></i>
-
-                            </button>
-
-
-                        </div>
-
-
-                    </div>
-
-                `
-            )
-            .join("");
-
-
-
-    /* =====================================================
-       BUTTON EVENTS
-    ====================================================== */
-
-    container
-        .querySelectorAll(
-            "button[data-action]"
-        )
-        .forEach(
-            button => {
-
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-
-                        const action =
-                            button.dataset.action;
-
-
-                        const id =
-                            button.dataset.id;
-
-
-                        const trips =
-                            getTrips();
-
-
-                        const trip =
-                            trips.find(
-                                item =>
-                                    item.id === id
-                            );
-
-
-                        if (!trip) {
-                            return;
-                        }
-
-
-
-                        /* OPEN */
-
-                        if (
-                            action === "open"
-                        ) {
-
-                            localStorage.setItem(
-                                CURRENT_TRIP_KEY,
-                                JSON.stringify(trip)
-                            );
-
-
-                            window.location.href =
-                                "itinerary.html";
-
-                        }
-
-
-
-                        /* DELETE */
-
-                        if (
-                            action === "delete"
-                        ) {
-
-
-                            const confirmed =
-                                confirm(
-                                    `Delete "${trip.name}"?`
-                                );
-
-
-                            if (!confirmed) {
-                                return;
-                            }
-
-
-                            const remaining =
-                                trips.filter(
-                                    item =>
-                                        item.id !== id
-                                );
-
-
-                            saveTrips(
-                                remaining
-                            );
-
-
-                            renderTrips();
-
-
-                            showToast(
-                                "Trip deleted successfully."
-                            );
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-}
-
-
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-const recentTripsContainer =
-    document.getElementById(
-        "recentTrips"
-    );
-
-
-if (recentTripsContainer) {
-
-    renderRecentTrips();
-
-}
-
-
-
-/* =========================================================
-   RENDER RECENT TRIPS
-========================================================= */
-
-function renderRecentTrips() {
-
-
-    const container =
-        document.getElementById(
-            "recentTrips"
-        );
-
-
-    if (!container) {
-        return;
-    }
-
-
-    const trips =
-        getTrips();
-
-
-    if (trips.length === 0) {
-
-        container.innerHTML = `
-
-            <div class="empty-trips">
-
-                <div class="empty-icon">
-
-                    <i class="fa-solid fa-map"></i>
-
-                </div>
-
-
-                <h2>
-                    Start planning
-                </h2>
-
-
-                <p>
-                    Create your first Wanderlyst adventure.
-                </p>
-
-
-                <a
-                    href="plan.html"
-                    class="primary-button"
-                >
-
-                    <i class="fa-solid fa-plus"></i>
-
-                    CREATE TRIP
-
-                </a>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    const recent =
-        trips
-            .slice()
-            .reverse()
-            .slice(0, 3);
-
-
-    container.innerHTML =
-        recent
-            .map(
-                trip => `
-
-                    <a
-                        href="#"
-                        class="dashboard-trip-card"
-                        data-trip-id="${trip.id}"
-                    >
-
-
-                        <div class="dashboard-trip-image">
-
-                            <i class="fa-solid fa-location-dot"></i>
-
-                        </div>
-
-
-                        <div class="dashboard-trip-content">
-
-
-                            <span class="trip-style">
-
-                                ${trip.style}
-
-                            </span>
-
-
-                            <h3>
-
-                                ${trip.name}
-
-                            </h3>
-
-
-                            <p>
-
-                                <i class="fa-solid fa-location-dot"></i>
-
-                                ${trip.destination}
-
-                            </p>
-
-
-                            <span class="trip-date">
-
-                                ${formatDate(trip.startDate)}
-
-                                -
-
-                                ${formatDate(trip.endDate)}
-
-                            </span>
-
-
-                        </div>
-
-
-                        <div class="dashboard-trip-arrow">
-
-                            <i class="fa-solid fa-chevron-right"></i>
-
-                        </div>
-
-
-                    </a>
-
-                `
-            )
-            .join("");
-
-
-
-    container
-        .querySelectorAll(
-            "[data-trip-id]"
-        )
-        .forEach(
-            card => {
-
-                card.addEventListener(
-                    "click",
-                    function (event) {
-
-                        event.preventDefault();
-
-
-                        const id =
-                            card.dataset.tripId;
-
-
-                        const trip =
-                            trips.find(
-                                item =>
-                                    item.id === id
-                            );
-
-
-                        if (!trip) {
-                            return;
-                        }
-
-
-                        localStorage.setItem(
-                            CURRENT_TRIP_KEY,
-                            JSON.stringify(trip)
-                        );
-
-
-                        window.location.href =
-                            "itinerary.html";
-
-                    }
-                );
-
-            }
-        );
-
-}
-
-
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-const profileEmail =
-    document.getElementById(
-        "profileEmail"
-    );
-
-
-if (profileEmail) {
-
-    const userData =
-        localStorage.getItem(
-            USER_KEY
-        );
-
-
-    if (userData) {
-
-        try {
-
-            const user =
-                JSON.parse(
-                    userData
-                );
-
-
-            profileEmail.textContent =
-                user.email || "";
-
-        } catch (error) {
-
-            console.error(
-                "Could not load user:",
-                error
+    if (mapLink) {
+
+        mapLink.href =
+            "https://www.google.com/maps/search/?api=1&query=" +
+            encodeURIComponent(
+                destination
             );
+
+    }
+
+}
+
+
+/* =====================================================
+   OPEN MAP
+===================================================== */
+
+function openMap() {
+
+    const destination =
+        currentTrip
+            ? currentTrip.destination
+            : "";
+
+
+    if (!destination) {
+
+        alert(
+            "Create a trip first."
+        );
+
+        return;
+
+    }
+
+
+    const query =
+        encodeURIComponent(
+            destination
+        );
+
+
+    window.open(
+
+        "https://www.google.com/maps/search/?api=1&query=" +
+        query,
+
+        "_blank"
+
+    );
+
+}
+
+
+/* =====================================================
+   HOTEL
+===================================================== */
+
+function openHotel() {
+
+    alert(
+        "Hotel booking will be connected next."
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE MODAL OUTSIDE
+===================================================== */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const modal =
+            document.getElementById(
+                "loginModal"
+            );
+
+
+        if (
+            modal &&
+            event.target === modal
+        ) {
+
+            closeLogin();
 
         }
 
     }
+);
+
+
+/* =====================================================
+   CHECK LOGIN ON PAGE LOAD
+===================================================== */
+
+async function checkLoggedInUser() {
+
+    const {
+        data: {
+            user
+        }
+    } =
+        await supabaseClient.auth.getUser();
+
+
+    if (user) {
+
+        currentUser = user;
+
+        await updateUserWelcome();
+
+    }
 
 }
 
 
+/* =====================================================
+   AUTH STATE LISTENER
+===================================================== */
 
-/* =========================================================
-   CONSOLE MESSAGE
-========================================================= */
+supabaseClient.auth.onAuthStateChange(
+    async function(event, session) {
 
-console.log(
-    "%cWanderlyst loaded successfully 🌍✈️",
-    "font-size:16px;font-weight:bold;color:#56352a;"
+        console.log(
+            "Auth event:",
+            event
+        );
+
+
+        if (session) {
+
+            currentUser =
+                session.user;
+
+            await updateUserWelcome();
+
+        } else {
+
+            currentUser = null;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function() {
+
+        showPage("home");
+
+        await checkLoggedInUser();
+
+        await loadSavedTrips();
+
+
+        const counter =
+            document.getElementById(
+                "travellerCount"
+            );
+
+
+        if (counter) {
+
+            counter.textContent =
+                travellerCount;
+
+        }
+
+    }
 );

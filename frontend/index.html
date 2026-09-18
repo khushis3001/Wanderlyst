@@ -5,99 +5,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Wanderlyst | Travel Beyond Boundaries</title>
+    <title>Wanderlyst — Travel Planner</title>
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-
-    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    >
 
+    <!-- Your CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="login-page">
+<body>
 
-    <main class="page">
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
 
-        <!-- =========================
-             HERO
-        ========================== -->
+    <nav class="navbar">
+
+        <a href="#" class="brand" onclick="showPage('home'); return false;">
+            <span class="brand-mark">W</span>
+            Wanderlyst
+        </a>
+
+        <div class="desktop-nav">
+
+            <a href="#" onclick="showPage('home'); return false;">
+                HOME
+            </a>
+
+            <a href="#" onclick="showPage('planner'); return false;">
+                PLAN A TRIP
+            </a>
+
+            <a href="#" onclick="showPage('trips'); return false;">
+                MY TRIPS
+            </a>
+
+        </div>
+
+        <button
+            class="nav-login"
+            onclick="openLogin()">
+            SIGN IN
+        </button>
+
+    </nav>
+
+
+    <!-- =====================================================
+         HOME PAGE
+    ====================================================== -->
+
+    <main id="homePage" class="page active-page">
+
+        <!-- HERO -->
 
         <section class="hero">
+
+            <div class="hero-image"></div>
 
             <div class="hero-overlay"></div>
 
             <div class="hero-content">
 
-                <div class="logo">
-                    <i class="fa-solid fa-compass"></i>
-                    <span>Wanderlyst</span>
+                <div class="eyebrow">
+                    <span></span>
+                    TRAVEL DIFFERENTLY
                 </div>
 
-                <div class="tagline">
-                    TRAVEL • DISCOVER • REMEMBER
+                <h1>
+                    Go<br>
+                    <em>somewhere.</em>
+                </h1>
+
+                <p>
+                    Wanderlyst helps you turn your travel ideas
+                    into beautifully planned journeys, built around
+                    your destination, budget and interests.
+                </p>
+
+                <button
+                    class="hero-button"
+                    onclick="showPage('planner')">
+
+                    Plan your journey
+
+                    <span>→</span>
+
+                </button>
+
+            </div>
+
+
+            <!-- FLOATING CARD -->
+
+            <div class="hero-floating-card">
+
+                <div class="mini-label">
+                    CURRENTLY LOVING
                 </div>
 
+                <div class="floating-place">
 
-                <div class="hero-text">
+                    <div class="place-thumb"></div>
 
-                    <p class="eyebrow">
-                        YOUR JOURNEY STARTS HERE
-                    </p>
-
-                    <h1>
-                        The world<br>
-                        is waiting.
-                    </h1>
-
-                    <p class="question">
-                        Where will you <span>go next?</span>
-                    </p>
-
-                </div>
-
-
-                <div class="route">
-
-                    <div class="route-point">
-
-                        <i class="fa-solid fa-location-dot"></i>
-
-                        <span>YOU</span>
-
+                    <div>
+                        <strong>Santorini</strong>
+                        <small>Greece · Aegean Sea</small>
                     </div>
 
-                    <div class="route-line"></div>
-
-                    <i class="fa-solid fa-plane plane"></i>
-
-                    <div class="route-line"></div>
-
-                    <div class="route-point">
-
-                        <i class="fa-solid fa-earth-americas"></i>
-
-                        <span>WORLD</span>
-
+                    <div class="heart">
+                        ♡
                     </div>
 
                 </div>
 
+            </div>
 
-                <div class="travel-quote">
 
-                    <i class="fa-solid fa-quote-left"></i>
+            <!-- SCROLL -->
 
-                    <span>
-                        Collect moments,<br>
-                        not things.
-                    </span>
+            <div class="scroll-indicator">
+
+                <div></div>
+
+                SCROLL TO EXPLORE
+
+            </div>
+
+        </section>
+
+
+        <!-- INTRO -->
+
+        <section class="intro-section">
+
+            <div class="section-tag">
+                THE WANDERLYST WAY
+            </div>
+
+            <div class="intro-grid">
+
+                <h2>
+                    Travel plans<br>
+                    with <em>personality.</em>
+                </h2>
+
+                <div class="intro-copy">
+
+                    <p>
+                        Forget generic travel plans.
+                        Tell us where you're going, how much
+                        you want to spend and what you love doing.
+                        We'll help shape the journey around you.
+                    </p>
+
+                    <button
+                        class="text-button"
+                        onclick="showPage('planner')">
+
+                        Start planning
+
+                        <span>→</span>
+
+                    </button>
 
                 </div>
 
@@ -106,175 +183,325 @@
         </section>
 
 
-        <!-- =========================
-             LOGIN
-        ========================== -->
+        <!-- DESTINATIONS -->
 
-        <section class="login-area">
+        <section class="destinations-section">
 
-            <div class="login-card">
+            <div class="section-header">
 
-                <div class="globe">
+                <div>
 
-                    <i class="fa-solid fa-earth-americas"></i>
+                    <div class="section-tag">
+                        GET INSPIRED
+                    </div>
+
+                    <h2>
+                        Somewhere<br>
+                        <em>beautiful.</em>
+                    </h2>
 
                 </div>
 
+                <button
+                    class="view-all"
+                    onclick="showPage('planner')">
 
-                <h2>
-                    Welcome Back
-                </h2>
+                    EXPLORE ALL →
+
+                </button>
+
+            </div>
 
 
-                <p class="subtitle">
-                    Sign in and continue your journey.
-                </p>
+            <div class="destination-grid">
 
+                <!-- PARIS -->
 
-                <form id="loginForm">
+                <div class="destination-card large">
 
-                    <!-- EMAIL -->
-
-                    <div class="input-group">
-
-                        <i class="fa-solid fa-envelope"></i>
-
-                        <input
-                            type="email"
-                            id="email"
-                            placeholder="Email address"
-                            autocomplete="email"
-                            required
-                        >
-
+                    <div
+                        class="destination-image"
+                        style="
+                        background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=90');
+                        ">
                     </div>
 
+                    <div class="destination-info">
 
-                    <!-- PASSWORD -->
-
-                    <div class="input-group">
-
-                        <i class="fa-solid fa-lock"></i>
-
-                        <input
-                            type="password"
-                            id="password"
-                            placeholder="Password"
-                            autocomplete="current-password"
-                            required
-                        >
-
-                        <button
-                            type="button"
-                            class="password-toggle"
-                            aria-label="Show password"
-                        >
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-
-                    </div>
-
-
-                    <!-- OPTIONS -->
-
-                    <div class="form-options">
-
-                        <label class="remember">
-
-                            <input
-                                type="checkbox"
-                                id="rememberMe"
-                            >
+                        <div>
 
                             <span>
-                                Remember me
+                                FRANCE
                             </span>
 
-                        </label>
+                            <h3>
+                                Paris
+                            </h3>
 
+                        </div>
 
-                        <a href="#" id="forgotPassword">
-                            Forgot password?
-                        </a>
+                        <div class="destination-arrow">
+                            ↗
+                        </div>
 
                     </div>
 
-
-                    <!-- LOGIN BUTTON -->
-
-                    <button
-                        type="submit"
-                        class="login-button"
-                    >
-
-                        LOGIN
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-                </form>
+                </div>
 
 
-                <!-- DIVIDER -->
+                <!-- BALI -->
 
-                <div class="divider">
+                <div class="destination-card">
 
-                    <span></span>
+                    <div
+                        class="destination-image"
+                        style="
+                        background-image:url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=90');
+                        ">
+                    </div>
+
+                    <div class="destination-info">
+
+                        <div>
+
+                            <span>
+                                INDONESIA
+                            </span>
+
+                            <h3>
+                                Bali
+                            </h3>
+
+                        </div>
+
+                        <div class="destination-arrow">
+                            ↗
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TOKYO -->
+
+                <div class="destination-card">
+
+                    <div
+                        class="destination-image"
+                        style="
+                        background-image:url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=90');
+                        ">
+                    </div>
+
+                    <div class="destination-info">
+
+                        <div>
+
+                            <span>
+                                JAPAN
+                            </span>
+
+                            <h3>
+                                Tokyo
+                            </h3>
+
+                        </div>
+
+                        <div class="destination-arrow">
+                            ↗
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SWITZERLAND -->
+
+                <div class="destination-card">
+
+                    <div
+                        class="destination-image"
+                        style="
+                        background-image:url('https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=900&q=90');
+                        ">
+                    </div>
+
+                    <div class="destination-info">
+
+                        <div>
+
+                            <span>
+                                SWITZERLAND
+                            </span>
+
+                            <h3>
+                                Alps
+                            </h3>
+
+                        </div>
+
+                        <div class="destination-arrow">
+                            ↗
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SANTORINI -->
+
+                <div class="destination-card">
+
+                    <div
+                        class="destination-image"
+                        style="
+                        background-image:url('https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=900&q=90');
+                        ">
+                    </div>
+
+                    <div class="destination-info">
+
+                        <div>
+
+                            <span>
+                                GREECE
+                            </span>
+
+                            <h3>
+                                Santorini
+                            </h3>
+
+                        </div>
+
+                        <div class="destination-arrow">
+                            ↗
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HOW IT WORKS -->
+
+        <section class="how-section">
+
+            <div class="section-tag">
+                HOW IT WORKS
+            </div>
+
+            <h2>
+                From idea to<br>
+                <em>itinerary.</em>
+            </h2>
+
+
+            <div class="steps">
+
+                <div class="step">
+
+                    <span>
+                        01
+                    </span>
+
+                    <div class="step-icon">
+                        ◇
+                    </div>
+
+                    <h3>
+                        Tell us your dream
+                    </h3>
 
                     <p>
-                        or continue with
+                        Choose your destination,
+                        dates, budget and the experiences
+                        you want.
                     </p>
 
-                    <span></span>
+                </div>
+
+
+                <div class="step">
+
+                    <span>
+                        02
+                    </span>
+
+                    <div class="step-icon">
+                        ✦
+                    </div>
+
+                    <h3>
+                        Build your journey
+                    </h3>
+
+                    <p>
+                        Wanderlyst organizes your trip
+                        into a clear and personalized plan.
+                    </p>
 
                 </div>
 
 
-                <!-- SOCIAL -->
+                <div class="step">
 
-                <div class="social-buttons">
+                    <span>
+                        03
+                    </span>
 
-                    <button
-                        type="button"
-                        title="Google"
-                        data-social="Google"
-                    >
-                        <i class="fa-brands fa-google"></i>
-                    </button>
+                    <div class="step-icon">
+                        ↗
+                    </div>
 
+                    <h3>
+                        Start wandering
+                    </h3>
 
-                    <button
-                        type="button"
-                        title="GitHub"
-                        data-social="GitHub"
-                    >
-                        <i class="fa-brands fa-github"></i>
-                    </button>
-
-
-                    <button
-                        type="button"
-                        title="Apple"
-                        data-social="Apple"
-                    >
-                        <i class="fa-brands fa-apple"></i>
-                    </button>
+                    <p>
+                        Save your journey and use your
+                        itinerary while you explore.
+                    </p>
 
                 </div>
 
+            </div>
 
-                <!-- SIGNUP -->
+        </section>
 
-                <p class="signup-text">
 
-                    New to Wanderlyst?
+        <!-- CTA -->
 
-                    <a href="signup.html">
-                        Create an account
-                    </a>
+        <section class="home-cta">
 
-                </p>
+            <div class="cta-image"></div>
+
+            <div class="cta-content">
+
+                <div class="section-tag">
+                    YOUR NEXT CHAPTER
+                </div>
+
+                <h2>
+                    Somewhere<br>
+                    <em>is waiting.</em>
+                </h2>
+
+                <button
+                    class="hero-button"
+                    onclick="showPage('planner')">
+
+                    Plan your journey
+
+                    <span>→</span>
+
+                </button>
 
             </div>
 
@@ -283,10 +510,1662 @@
     </main>
 
 
-    <div id="toast"></div>
+
+    <!-- =====================================================
+         PLANNER PAGE
+    ====================================================== -->
+
+    <main id="plannerPage" class="page">
+
+        <section class="planner-hero">
+
+            <div class="section-tag">
+                YOUR JOURNEY
+            </div>
+
+            <h1>
+                Plan<br>
+                <em>something.</em>
+            </h1>
+
+            <p>
+                Tell us a little about your trip.
+                We'll take care of the rest.
+            </p>
+
+        </section>
 
 
+        <section class="planner-area">
+
+
+            <!-- FORM -->
+
+            <div class="planner-form-card">
+
+                <div class="form-top">
+
+                    <div>
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Where are you going?
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                    <p>
+                        DESTINATION
+                    </p>
+
+                </div>
+
+
+                <!-- DESTINATION -->
+
+                <div class="destination-input">
+
+                    <span>
+                        ◇
+                    </span>
+
+                    <input
+                        type="text"
+                        id="destination"
+                        placeholder="Search for a city or country..."
+                    >
+
+                    <button
+                        type="button"
+                        onclick="suggestDestination()">
+
+                        EXPLORE
+
+                    </button>
+
+                </div>
+
+
+                <!-- SUGGESTIONS -->
+
+                <div
+                    id="destinationSuggestions"
+                    class="destination-suggestions">
+
+                    <button
+                        type="button"
+                        onclick="setDestination('Paris')">
+                        Paris
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="setDestination('Tokyo')">
+                        Tokyo
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="setDestination('Bali')">
+                        Bali
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="setDestination('Dubai')">
+                        Dubai
+                    </button>
+
+                </div>
+
+
+                <div class="form-divider"></div>
+
+
+                <!-- DATES -->
+
+                <div class="form-top">
+
+                    <div>
+
+                        <span>
+                            02
+                        </span>
+
+                        <h2>
+                            When?
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="input-grid">
+
+                    <div class="input-field">
+
+                        <label>
+                            DEPARTURE
+                        </label>
+
+                        <input
+                            type="date"
+                            id="startDate"
+                        >
+
+                    </div>
+
+
+                    <div class="input-field">
+
+                        <label>
+                            RETURN
+                        </label>
+
+                        <input
+                            type="date"
+                            id="endDate"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-divider"></div>
+
+
+                <!-- TRAVELLERS -->
+
+                <div class="form-top">
+
+                    <div>
+
+                        <span>
+                            03
+                        </span>
+
+                        <h2>
+                            Who's coming?
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="traveller-selector">
+
+                    <div>
+
+                        <span>
+                            Travellers
+                        </span>
+
+                        <small>
+                            Adults & children
+                        </small>
+
+                    </div>
+
+                    <div class="counter">
+
+                        <button
+                            type="button"
+                            onclick="changeTravellers(-1)">
+                            −
+                        </button>
+
+                        <strong id="travellerCount">
+                            2
+                        </strong>
+
+                        <button
+                            type="button"
+                            onclick="changeTravellers(1)">
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-divider"></div>
+
+
+                <!-- BUDGET -->
+
+                <div class="form-top">
+
+                    <div>
+
+                        <span>
+                            04
+                        </span>
+
+                        <h2>
+                            What's the budget?
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="budget-input-large">
+
+                    <span>
+                        ₹
+                    </span>
+
+                    <input
+                        type="number"
+                        id="budget"
+                        placeholder="50,000"
+                        min="1000"
+                    >
+
+                </div>
+
+                <div class="budget-hint">
+                    Total budget for the entire journey
+                </div>
+
+
+                <div class="form-divider"></div>
+
+
+                <!-- INTERESTS -->
+
+                <div class="form-top">
+
+                    <div>
+
+                        <span>
+                            05
+                        </span>
+
+                        <h2>
+                            What do you love?
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="interest-options">
+
+                    <button
+                        type="button"
+                        onclick="toggleInterest(this)">
+                        Food
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="toggleInterest(this)">
+                        Nature
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="toggleInterest(this)">
+                        Culture
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="toggleInterest(this)">
+                        Adventure
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="toggleInterest(this)">
+                        Shopping
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="toggleInterest(this)">
+                        Beaches
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="toggleInterest(this)">
+                        Nightlife
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="toggleInterest(this)">
+                        History
+                    </button>
+
+                </div>
+
+
+                <div class="form-divider"></div>
+
+
+                <!-- STYLE -->
+
+                <div class="form-top">
+
+                    <div>
+
+                        <span>
+                            06
+                        </span>
+
+                        <h2>
+                            Travel style
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="travel-style">
+
+                    <button
+                        type="button"
+                        class="style-card active"
+                        onclick="selectStyle(this)">
+
+                        <span>
+                            ◇
+                        </span>
+
+                        <strong>
+                            Budget
+                        </strong>
+
+                        <small>
+                            Smart & simple
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="style-card"
+                        onclick="selectStyle(this)">
+
+                        <span>
+                            ✦
+                        </span>
+
+                        <strong>
+                            Comfort
+                        </strong>
+
+                        <small>
+                            A little extra
+                        </small>
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="style-card"
+                        onclick="selectStyle(this)">
+
+                        <span>
+                            ♢
+                        </span>
+
+                        <strong>
+                            Luxury
+                        </strong>
+
+                        <small>
+                            No compromises
+                        </small>
+
+                    </button>
+
+                </div>
+
+
+                <!-- CREATE -->
+
+                <button
+                    class="create-trip-button"
+                    onclick="generateTrip()">
+
+                    <span>
+                        Create my journey
+                    </span>
+
+                    <strong>
+                        →
+                    </strong>
+
+                </button>
+
+            </div>
+
+
+            <!-- SIDE -->
+
+            <aside class="planner-side">
+
+                <div class="planner-photo">
+
+                    <div class="photo-caption">
+
+                        <span>
+                            THE WORLD IS YOURS
+                        </span>
+
+                        <strong>
+                            Go<br>
+                            wander.
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="planning-note">
+
+                    <span>
+                        ✦
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            A plan that feels like you.
+                        </strong>
+
+                        <p>
+                            Your choices shape every part
+                            of your journey.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         RESULTS PAGE
+    ====================================================== -->
+
+    <main id="resultsPage" class="page">
+
+
+        <!-- RESULTS HERO -->
+
+        <section class="results-hero">
+
+            <div class="results-image"></div>
+
+            <div class="results-overlay"></div>
+
+            <div class="results-hero-content">
+
+                <div class="section-tag">
+                    YOUR JOURNEY
+                </div>
+
+                <h1 id="resultDestination">
+                    Paris
+                </h1>
+
+                <p id="resultDetails">
+                    5 days - 2 travellers
+                </p>
+
+            </div>
+
+
+            <button
+                class="edit-trip"
+                onclick="showPage('planner')">
+
+                ← EDIT JOURNEY
+
+            </button>
+
+        </section>
+
+
+        <!-- SUMMARY -->
+
+        <section class="trip-summary">
+
+            <div class="summary-intro">
+
+                <div>
+
+                    <div class="section-tag">
+                        YOUR BUDGET
+                    </div>
+
+                    <h2>
+                        Every rupee<br>
+                        <em>planned.</em>
+                    </h2>
+
+                </div>
+
+
+                <div class="total-budget">
+
+                    <span>
+                        TOTAL BUDGET
+                    </span>
+
+                    <strong id="resultBudget">
+                        ₹50,000
+                    </strong>
+
+                    <small>
+                        Within your budget
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- COST GRID -->
+
+            <div class="cost-grid">
+
+                <div class="cost-card">
+
+                    <span>
+                        ◇
+                    </span>
+
+                    <small>
+                        ACCOMMODATION
+                    </small>
+
+                    <strong id="resultHotel">
+                        ₹17,500
+                    </strong>
+
+                    <div class="cost-bar">
+                        <i
+                            id="hotelBar"
+                            style="width:35%">
+                        </i>
+                    </div>
+
+                </div>
+
+
+                <div class="cost-card">
+
+                    <span>
+                        ↗
+                    </span>
+
+                    <small>
+                        TRANSPORT
+                    </small>
+
+                    <strong id="resultTransport">
+                        ₹12,500
+                    </strong>
+
+                    <div class="cost-bar">
+                        <i
+                            id="transportBar"
+                            style="width:25%">
+                        </i>
+                    </div>
+
+                </div>
+
+
+                <div class="cost-card">
+
+                    <span>
+                        ♢
+                    </span>
+
+                    <small>
+                        FOOD
+                    </small>
+
+                    <strong id="resultFood">
+                        ₹7,500
+                    </strong>
+
+                    <div class="cost-bar">
+                        <i
+                            id="foodBar"
+                            style="width:15%">
+                        </i>
+                    </div>
+
+                </div>
+
+
+                <div class="cost-card">
+
+                    <span>
+                        ✦
+                    </span>
+
+                    <small>
+                        ACTIVITIES
+                    </small>
+
+                    <strong id="resultActivities">
+                        ₹7,500
+                    </strong>
+
+                    <div class="cost-bar">
+                        <i
+                            id="activitiesBar"
+                            style="width:15%">
+                        </i>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+<div class="cost-card">
+
+    <span>
+        ✦
+    </span>
+
+    <small>
+        ACTIVITIES
+    </small>
+
+    <strong id="resultActivities">
+        ₹7,500
+    </strong>
+
+    <div class="cost-bar">
+        <i
+            id="activitiesBar"
+            style="width:15%">
+        </i>
+    </div>
+
+</div>
+<div class="cost-card">
+
+    <span>
+        ◇
+    </span>
+
+    <small>
+        EMERGENCY / MISC.
+    </small>
+
+    <strong id="resultEmergency">
+        ₹5,000
+    </strong>
+
+    <div class="cost-bar">
+        <i
+            id="emergencyBar"
+            style="width:10%">
+        </i>
+    </div>
+
+</div>
+<div class="budget-planner-panel">
+
+    <div class="budget-planner-header">
+
+        <div>
+            <div class="section-tag">
+                SMART BUDGET PLANNER
+            </div>
+
+            <h3>
+                Where your money<br>
+                <em>goes.</em>
+            </h3>
+        </div>
+
+        <div class="budget-total-mini">
+
+            <span>
+                TOTAL
+            </span>
+
+            <strong id="plannerTotal">
+                ₹50,000
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="budget-breakdown">
+
+        <div class="budget-line">
+
+            <div>
+                <span>Accommodation</span>
+                <small>35%</small>
+            </div>
+
+            <strong id="plannerHotel">
+                ₹17,500
+            </strong>
+
+        </div>
+
+
+        <div class="budget-line">
+
+            <div>
+                <span>Transport</span>
+                <small>25%</small>
+            </div>
+
+            <strong id="plannerTransport">
+                ₹12,500
+            </strong>
+
+        </div>
+
+
+        <div class="budget-line">
+
+            <div>
+                <span>Food</span>
+                <small>15%</small>
+            </div>
+
+            <strong id="plannerFood">
+                ₹7,500
+            </strong>
+
+        </div>
+
+
+        <div class="budget-line">
+
+            <div>
+                <span>Activities</span>
+                <small>15%</small>
+            </div>
+
+            <strong id="plannerActivities">
+                ₹7,500
+            </strong>
+
+        </div>
+
+
+        <div class="budget-line">
+
+            <div>
+                <span>Emergency / Misc.</span>
+                <small>10%</small>
+            </div>
+
+            <strong id="plannerEmergency">
+                ₹5,000
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+        <!-- =================================================
+             ITINERARY
+        ================================================== -->
+
+        <section class="itinerary-section">
+<!-- =================================================
+     WEATHER FORECAST
+================================================== -->
+
+<section class="weather-section">
+
+    <div class="weather-header">
+
+        <div>
+            <div class="section-tag">
+                TRIP WEATHER
+            </div>
+
+            <h2>
+                Know before<br>
+                you <em>wander.</em>
+            </h2>
+
+            <p id="weatherLocation">
+                Checking the weather for your destination...
+            </p>
+        </div>
+
+        <div class="weather-current">
+
+            <div class="weather-icon" id="weatherMainIcon">
+                ☀
+            </div>
+
+            <div>
+                <strong id="weatherMainTemp">
+                    --
+                </strong>
+
+                <span id="weatherMainCondition">
+                    Loading...
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- WEATHER DAYS -->
+
+    <div
+        class="weather-days"
+        id="weatherDays">
+
+        <div class="weather-loading">
+            ✦ Checking destination weather...
+        </div>
+
+    </div>
+
+
+    <!-- WEATHER NOTE -->
+
+    <div class="weather-note">
+
+        <span>✦</span>
+
+        <div>
+
+            <strong>
+                Weather-aware planning
+            </strong>
+
+            <p id="weatherRecommendation">
+                We're checking the forecast so you can
+                plan your journey better.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+            <div class="itinerary-header">
+
+                <div>
+
+                    <div class="section-tag">
+                        YOUR ITINERARY
+                    </div>
+
+                    <h2>
+                        A few days<br>
+                        <em>well spent.</em>
+                    </h2>
+
+                </div>
+
+                <div class="ai-badge">
+                    ✦ PERSONALIZED PLAN
+                </div>
+
+            </div>
+
+
+            <div class="itinerary-layout">
+
+
+                <!-- TIMELINE -->
+
+                <div>
+
+
+                    <!-- DAY 1 -->
+
+                    <div class="timeline-day">
+
+                        <div class="day-marker">
+
+                            <span>
+                                01
+                            </span>
+
+                        </div>
+
+                        <div class="day-body">
+
+                            <div class="day-heading">
+
+                                <div>
+
+                                    <small>
+                                        DAY ONE
+                                    </small>
+
+                                    <h3>
+                                        Arrival & discovery
+                                    </h3>
+
+                                    <p>
+                                        Ease into your new surroundings.
+                                    </p>
+
+                                </div>
+
+                                <span>
+                                    ✦
+                                </span>
+
+                            </div>
+
+
+                            <div class="activity-row">
+
+                                <div class="activity-time">
+                                    10:00
+                                </div>
+
+                                <div class="activity-icon">
+                                    ✈
+                                </div>
+
+                                <div class="activity-text">
+
+                                    <strong>
+                                        Arrive & settle in
+                                    </strong>
+
+                                    <p>
+                                        Check into your accommodation
+                                        and take some time to relax.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="activity-row">
+
+                                <div class="activity-time">
+                                    13:00
+                                </div>
+
+                                <div class="activity-icon">
+                                    ◇
+                                </div>
+
+                                <div class="activity-text">
+
+                                    <strong>
+                                        Local lunch
+                                    </strong>
+
+                                    <p>
+                                        Try something authentic
+                                        from the neighbourhood.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="activity-row">
+
+                                <div class="activity-time">
+                                    16:00
+                                </div>
+
+                                <div class="activity-icon">
+                                    ♢
+                                </div>
+
+                                <div class="activity-text">
+
+                                    <strong>
+                                        Explore the city
+                                    </strong>
+
+                                    <p>
+                                        Take a relaxed walking tour
+                                        through the city centre.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DAY 2 -->
+
+                    <div class="timeline-day">
+
+                        <div class="day-marker">
+
+                            <span>
+                                02
+                            </span>
+
+                        </div>
+
+                        <div class="day-body">
+
+                            <div class="day-heading">
+
+                                <div>
+
+                                    <small>
+                                        DAY TWO
+                                    </small>
+
+                                    <h3>
+                                        Culture & adventure
+                                    </h3>
+
+                                    <p>
+                                        Discover what makes the destination unique.
+                                    </p>
+
+                                </div>
+
+                                <span>
+                                    ✦
+                                </span>
+
+                            </div>
+
+
+                            <div class="activity-row">
+
+                                <div class="activity-time">
+                                    09:00
+                                </div>
+
+                                <div class="activity-icon">
+                                    ◇
+                                </div>
+
+                                <div class="activity-text">
+
+                                    <strong>
+                                        Visit a landmark
+                                    </strong>
+
+                                    <p>
+                                        Start the morning with
+                                        one of the city's highlights.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="activity-row">
+
+                                <div class="activity-time">
+                                    13:00
+                                </div>
+
+                                <div class="activity-icon">
+                                    ♢
+                                </div>
+
+                                <div class="activity-text">
+
+                                    <strong>
+                                        Explore local cuisine
+                                    </strong>
+
+                                    <p>
+                                        Make lunch part of the adventure.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="activity-row">
+
+                                <div class="activity-time">
+                                    18:00
+                                </div>
+
+                                <div class="activity-icon">
+                                    ✦
+                                </div>
+
+                                <div class="activity-text">
+
+                                    <strong>
+                                        Evening experience
+                                    </strong>
+
+                                    <p>
+                                        Finish the day with a memorable
+                                        local experience.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DAY 3 -->
+
+                    <div class="timeline-day">
+
+                        <div class="day-marker">
+
+                            <span>
+                                03
+                            </span>
+
+                        </div>
+
+                        <div class="day-body">
+
+                            <div class="day-heading">
+
+                                <div>
+
+                                    <small>
+                                        DAY THREE
+                                    </small>
+
+                                    <h3>
+                                        Slow wandering
+                                    </h3>
+
+                                    <p>
+                                        Leave room for unexpected discoveries.
+                                    </p>
+
+                                </div>
+
+                                <span>
+                                    ✦
+                                </span>
+
+                            </div>
+
+
+                            <div class="activity-row">
+
+                                <div class="activity-time">
+                                    09:30
+                                </div>
+
+                                <div class="activity-icon">
+                                    ♢
+                                </div>
+
+                                <div class="activity-text">
+
+                                    <strong>
+                                        Morning exploration
+                                    </strong>
+
+                                    <p>
+                                        Find a quieter side of the destination.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="activity-row">
+
+                                <div class="activity-time">
+                                    14:00
+                                </div>
+
+                                <div class="activity-icon">
+                                    ◇
+                                </div>
+
+                                <div class="activity-text">
+
+                                    <strong>
+                                        Free afternoon
+                                    </strong>
+
+                                    <p>
+                                        Follow your interests and explore freely.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SIDEBAR -->
+
+                <aside class="results-sidebar">
+
+
+                    <!-- INTERACTIVE MAP -->
+
+                    <div class="map-panel">
+
+                        <div
+                            class="map-background"
+                            id="interactiveMap">
+
+                            <div class="map-road road-one"></div>
+                            <div class="map-road road-two"></div>
+                            <div class="map-road road-three"></div>
+
+
+                            <div class="map-pin p1">
+                                1
+                            </div>
+
+                            <div class="map-pin p2">
+                                2
+                            </div>
+
+                            <div class="map-pin p3">
+                                3
+                            </div>
+
+
+                            <div
+                                class="map-city"
+                                id="mapCity">
+                                Paris
+                            </div>
+
+                        </div>
+
+
+                        <div class="map-footer">
+
+                            <div>
+
+                                <small>
+                                    YOUR DESTINATION
+                                </small>
+
+                                <strong id="mapDestination">
+                                    Paris
+                                </strong>
+
+                            </div>
+
+                            <button
+                                onclick="openMap()">
+
+                                OPEN MAP ↗
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- HOTEL -->
+
+                    <div class="hotel-panel">
+
+                        <div
+                            class="hotel-photo"
+                            style="
+                            background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1000&q=90');
+                            ">
+                        </div>
+
+
+                        <div class="hotel-details">
+
+                            <small>
+                                STAY RECOMMENDATION
+                            </small>
+
+                            <h3>
+                                Boutique Stay
+                            </h3>
+
+                            <p>
+                                A comfortable stay close
+                                to the heart of the city.
+                            </p>
+
+
+                            <div class="hotel-price">
+
+                                <strong>
+                                    ₹6,200
+                                    <small>/ night</small>
+                                </strong>
+
+                                <button
+                                    onclick="openHotel()">
+
+                                    VIEW STAY →
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- NOTE -->
+
+                    <div class="trip-note">
+
+                        <span>
+                            ✦
+                        </span>
+
+                        <div>
+
+                            <small>
+                                WANDERLYST NOTE
+                            </small>
+
+                            <p>
+                                Leave some space in your itinerary.
+                                The best travel memories are often
+                                the ones you don't plan.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="result-actions">
+
+                <button onclick="saveTrip()">
+                    ♡ SAVE JOURNEY
+                </button>
+
+                <button onclick="showPage('planner')">
+                    PLAN ANOTHER
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         MY TRIPS PAGE
+    ====================================================== -->
+
+    <main id="tripsPage" class="page">
+
+        <section class="trips-hero">
+
+            <div class="section-tag">
+                YOUR COLLECTION
+            </div>
+
+            <h1>
+                My<br>
+                <em>journeys.</em>
+            </h1>
+
+            <p>
+                Every adventure you've saved,
+                all in one place.
+            </p>
+
+        </section>
+
+
+        <section class="saved-trips">
+
+            <div id="savedTripsContainer">
+
+                <!-- JavaScript loads trips here -->
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         LOGIN MODAL
+    ====================================================== -->
+
+    <div
+        id="loginModal"
+        class="modal">
+
+        <div class="login-modal">
+
+
+            <button
+                class="modal-close"
+                onclick="closeLogin()">
+                ×
+            </button>
+
+
+            <div class="brand modal-brand">
+
+                <span class="brand-mark">
+                    W
+                </span>
+
+                Wanderlyst
+
+            </div>
+
+
+            <div class="section-tag">
+                WELCOME TO WANDERLYST
+            </div>
+
+
+            <h2>
+                Continue<br>
+                <em>wandering.</em>
+            </h2>
+
+
+            <!-- EMAIL -->
+
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="Email address"
+            >
+
+
+            <!-- PASSWORD -->
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+            >
+
+
+            <!-- SIGN IN -->
+
+            <button
+                class="login-submit"
+                onclick="signIn()">
+
+                Sign in →
+
+            </button>
+
+
+            <!-- SIGN UP -->
+
+            <p class="login-bottom">
+
+                Don't have an account?
+
+                <strong
+                    onclick="signUp()"
+                    style="cursor:pointer">
+
+                    Create one
+
+                </strong>
+
+            </p>
+
+
+            <!-- MESSAGE -->
+
+            <p
+                id="loginMessage"
+                class="login-message">
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        <div class="footer-brand">
+
+            <div class="brand">
+
+                <span class="brand-mark">
+                    W
+                </span>
+
+                Wanderlyst
+
+            </div>
+
+            <p>
+                Travel plans with personality.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a
+                href="#"
+                onclick="showPage('home'); return false;">
+                Home
+            </a>
+
+            <a
+                href="#"
+                onclick="showPage('planner'); return false;">
+                Plan
+            </a>
+
+            <a
+                href="#"
+                onclick="showPage('trips'); return false;">
+                My Trips
+            </a>
+
+        </div>
+
+
+        <div class="footer-copy">
+
+            © 2026 Wanderlyst
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         SUPABASE
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Supabase connection -->
+    <script src="supabase.js"></script>
+
+    <!-- Main JavaScript -->
     <script src="script.js"></script>
+
 
 </body>
 
